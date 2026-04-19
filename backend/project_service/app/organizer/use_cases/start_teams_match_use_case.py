@@ -7,9 +7,10 @@ from app.organizer.utils import PlanFormatTeamsUtils
 from datetime import datetime
 
 
-
 class StartTeamsMatchUseCase(IUseCase):
-    def __init__(self, repository: IProjectRepository, utils: PlanFormatTeamsUtils) -> None:
+    def __init__(
+        self, repository: IProjectRepository, utils: PlanFormatTeamsUtils
+    ) -> None:
         self.repository = repository
         self.utils = utils
 

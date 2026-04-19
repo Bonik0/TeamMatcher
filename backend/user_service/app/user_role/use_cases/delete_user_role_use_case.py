@@ -7,7 +7,9 @@ from core.entities import ProjectStatus
 
 
 class DeleteUserProjectApplicationUseCase(IUseCase):
-    def __init__(self, role_repository: IRoleRepository, project_repository: IProjectRepository) -> None:
+    def __init__(
+        self, role_repository: IRoleRepository, project_repository: IProjectRepository
+    ) -> None:
         self.role_repository = role_repository
         self.project_repository = project_repository
 

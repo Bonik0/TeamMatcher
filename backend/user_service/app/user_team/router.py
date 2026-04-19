@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, Path, Request
+from fastapi import APIRouter, Depends, Request
 from core.dependencies.postgres import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -9,8 +9,7 @@ from app.user_team.use_cases.find_user_teams_use_case import FindUserTeamsUseCas
 from app.user_team.schemas import FindUserTeamsOut, FindTeamOut
 
 router = APIRouter(
-    prefix="/team", tags=["Teams"], 
-    dependencies=[get_verifier(UserRoleType.user)]
+    prefix="/team", tags=["Teams"], dependencies=[get_verifier(UserRoleType.user)]
 )
 
 

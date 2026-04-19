@@ -21,7 +21,7 @@ def get_create_project_use_case(
     project: IProjectRepository = Depends(get_project_repository),
     role: IRoleRepository = Depends(get_role_repository),
     competence: ICompetenceRepository = Depends(get_competence_repository),
-    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils)
+    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils),
 ) -> CreateProjectUseCase:
     return CreateProjectUseCase(project, role, competence, utils)
 
@@ -36,28 +36,26 @@ def get_update_project_use_case(
     project: IProjectRepository = Depends(get_project_repository),
     role: IRoleRepository = Depends(get_role_repository),
     competence: ICompetenceRepository = Depends(get_competence_repository),
-    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils)
+    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils),
 ) -> UpdateProjectUseCase:
     return UpdateProjectUseCase(project, role, competence, utils)
 
 
 def get_cancel_project_use_case(
     project: IProjectRepository = Depends(get_project_repository),
-    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils)
+    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils),
 ) -> CancelProjectUseCase:
     return CancelProjectUseCase(project, utils)
 
 
-
 def get_start_teams_match_use_case(
     project: IProjectRepository = Depends(get_project_repository),
-    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils)
+    utils: PlanFormatTeamsUtils = Depends(get_formating_teams_utils),
 ) -> StartTeamsMatchUseCase:
     return StartTeamsMatchUseCase(project, utils)
 
 
-
 def get_find_teams_use_case(
-    repository: ITeamRepository = Depends(get_team_repository)
+    repository: ITeamRepository = Depends(get_team_repository),
 ) -> FindTeamsUseCase:
     return FindTeamsUseCase(repository)

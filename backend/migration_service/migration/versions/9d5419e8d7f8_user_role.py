@@ -5,15 +5,14 @@ Revises: ceaac4a4095d
 Create Date: 2026-04-16 07:53:22.564098
 
 """
+
 from typing import Sequence, Union
 
-from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '9d5419e8d7f8'
-down_revision: Union[str, None] = 'ceaac4a4095d'
+revision: str = "9d5419e8d7f8"
+down_revision: Union[str, None] = "ceaac4a4095d"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 

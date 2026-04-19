@@ -32,8 +32,7 @@ from app.user_role.use_cases.find_all_user_roles_use_case import FindAllUserRole
 
 
 router = APIRouter(
-    prefix="/role", tags=["Roles"], 
-    dependencies=[get_verifier(UserRoleType.user)]
+    prefix="/role", tags=["Roles"], dependencies=[get_verifier(UserRoleType.user)]
 )
 
 

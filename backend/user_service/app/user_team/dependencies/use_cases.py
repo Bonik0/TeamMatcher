@@ -5,6 +5,6 @@ from fastapi import Depends
 
 
 def get_find_user_teams_use_case(
-    repository: ITeamRepository = Depends(get_team_repository)
+    repository: ITeamRepository = Depends(get_team_repository),
 ) -> FindUserTeamsUseCase:
     return FindUserTeamsUseCase(repository)

@@ -1,30 +1,27 @@
-import sys
-sys.path.append("/home/bonik/giploma/backend")
-sys.path.append("/home/bonik/giploma/backend/project_service")
 import pytest
 from decimal import Decimal
-from unittest.mock import Mock, create_autospec
-from core.entities import UserCompetenceLevelType, ProjectRoleCompetence, UserWithFormsAndCompetences, UserProjectRole, ProjectRoleWithRoleAndProjectRoleCompetences, Role
-from project_service.app.match.utils.competence_similarity import CompetenceSimilarityUtils
-from project_service.app.match.utils.user_project_role_similarity import UserProjectRoleSimilarityUtils
+from core.entities import (
+    UserProjectRole,
+)
+from project_service.app.match.utils.user_project_role_similarity import (
+    UserProjectRoleSimilarityUtils,
+)
 
 
 @pytest.fixture
 def utils():
     return UserProjectRoleSimilarityUtils(
-        quantize="0.01",
-        desired_role_coeff="1.0",
-        role_priority_bonus_coeff="1.0"
+        quantize="0.01", desired_role_coeff="1.0", role_priority_bonus_coeff="1.0"
     )
+
 
 @pytest.fixture
 def sample_user_forms():
     return [
-            UserProjectRole(user_id=1, project_role_id=101, priority=1),
-            UserProjectRole(user_id=1, project_role_id=102, priority=2),
-            UserProjectRole(user_id=1, project_role_id=103, priority=3),
-        ]
-
+        UserProjectRole(user_id=1, project_role_id=101, priority=1),
+        UserProjectRole(user_id=1, project_role_id=102, priority=2),
+        UserProjectRole(user_id=1, project_role_id=103, priority=3),
+    ]
 
 
 class TestGetRolePriorityBonus:
@@ -46,13 +43,12 @@ class TestGetRolePriorityBonus:
 
     def test_with_coeff(self):
         utils_custom = UserProjectRoleSimilarityUtils(
-            quantize="0.01",
-            desired_role_coeff="1.0",
-            role_priority_bonus_coeff="0.5"
+            quantize="0.01", desired_role_coeff="1.0", role_priority_bonus_coeff="0.5"
         )
         bonus = utils_custom.get_role_priority_bonus(priority=1, max_priority=3)
         assert bonus == Decimal("0.50")
-        
+
+
 class TestGetRolePriority:
     def test_found(self, utils, sample_user_forms):
         priority = utils.get_role_priority(sample_user_forms, 102)
@@ -61,11 +57,13 @@ class TestGetRolePriority:
     def test_not_found(self, utils, sample_user_forms):
         priority = utils.get_role_priority(sample_user_forms, 999)
         assert priority is None
-        
-        
+
+
 class TestExecute:
     def test_undesired_role(self, utils):
-        sample_user_forms = [UserProjectRole(user_id=1, project_role_id=200, priority=1)]
+        sample_user_forms = [
+            UserProjectRole(user_id=1, project_role_id=200, priority=1)
+        ]
         score = utils.execute(Decimal("0.85"), sample_user_forms, 101)
         assert score == Decimal("0.85")
 
@@ -93,9 +91,7 @@ class TestExecute:
 
     def test_custom_coeffs(self):
         utils_custom = UserProjectRoleSimilarityUtils(
-            quantize="0.001",
-            desired_role_coeff="2.0",
-            role_priority_bonus_coeff="0.3"
+            quantize="0.001", desired_role_coeff="2.0", role_priority_bonus_coeff="0.3"
         )
 
         user_forms = [UserProjectRole(user_id=1, project_role_id=101, priority=1)]
@@ -108,22 +104,18 @@ class TestExecute:
 
     def test_quantization(self):
         utils_quant = UserProjectRoleSimilarityUtils(
-            quantize="0.1",  
-            desired_role_coeff="1.0",
-            role_priority_bonus_coeff="1.0"
+            quantize="0.1", desired_role_coeff="1.0", role_priority_bonus_coeff="1.0"
         )
         user_forms = [UserProjectRole(user_id=1, project_role_id=101, priority=1)]
         score = utils_quant.execute(Decimal("0.33333"), user_forms, 101)
         # 1.0 + 0.33333 + 1.0 = 2.33333 -> quantize 0.1 => 2.3
         assert score == Decimal("2.3")
-        
-        
+
+
 class TestEdgeCases:
     def test_zero_priority_bonus_coeff(self):
         utils_zero = UserProjectRoleSimilarityUtils(
-            quantize="0.01",
-            desired_role_coeff="1.0",
-            role_priority_bonus_coeff="0"
+            quantize="0.01", desired_role_coeff="1.0", role_priority_bonus_coeff="0"
         )
 
         user_forms = [UserProjectRole(user_id=1, project_role_id=101, priority=1)]
@@ -133,9 +125,7 @@ class TestEdgeCases:
 
     def test_zero_desired_coeff(self):
         utils_zero = UserProjectRoleSimilarityUtils(
-            quantize="0.01",
-            desired_role_coeff="0",
-            role_priority_bonus_coeff="1.0"
+            quantize="0.01", desired_role_coeff="0", role_priority_bonus_coeff="1.0"
         )
         user_forms = [UserProjectRole(user_id=1, project_role_id=101, priority=1)]
         score = utils_zero.execute(Decimal("0.50"), user_forms, 101)

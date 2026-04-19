@@ -5,8 +5,6 @@ from app.organizer.schemas import ProjectUpdateIn
 from fastapi import HTTPException, status
 
 
-
-
 class UpdateProjectUseCase(BaseProjectUseCase):
     async def execute(
         self, session: AsyncSession, organizer_id: int, form: ProjectUpdateIn
@@ -39,5 +37,3 @@ class UpdateProjectUseCase(BaseProjectUseCase):
         await self._create_or_update_roles(session, project.id, form.roles)
         await self.utils.update(form.project_id, form.start_time.replace(tzinfo=None))
         await session.commit()
-        
-

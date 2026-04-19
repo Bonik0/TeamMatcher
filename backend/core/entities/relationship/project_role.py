@@ -5,7 +5,10 @@ from core.entities.relationship.project_role_competence import (
     ProjectRoleCompetenceWithCompetence,
 )
 from core.entities.base.user_project_role import UserProjectRole
-from core.entities.relationship.user_project_role import UserProjectRoleWithUserCompetences
+from core.entities.relationship.user_project_role import (
+    UserProjectRoleWithUserCompetences,
+)
+
 
 class ProjectRoleWithRole(ProjectRole):
     role: Role
@@ -17,12 +20,12 @@ class ProjectRoleWithRoleAndProjectRoleCompetences(ProjectRoleWithRole):
 
 class ProjectRoleWithRoleAndForms(ProjectRoleWithRole):
     forms: list[UserProjectRole]
-    
-    
+
+
 class ProjectRoleWithCompetencesAndUserCompetences(ProjectRole):
     competences: list[ProjectRoleCompetence]
     forms: list[UserProjectRoleWithUserCompetences]
-    
-    
+
+
 class ProjectRoleWithCompetences(ProjectRole):
     competences: list[ProjectRoleCompetence]

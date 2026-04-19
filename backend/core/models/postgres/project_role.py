@@ -37,7 +37,9 @@ class ProjectRoleAssociationDB(Base):
     forms = one_to_many_relationship(
         "UserProjectRoleAssociationDB", back_populates="project_role"
     )
-    team_members = one_to_many_relationship("TeamMemberDB", back_populates="project_role")
+    team_members = one_to_many_relationship(
+        "TeamMemberDB", back_populates="project_role"
+    )
 
     __table_args__ = (
         UniqueConstraint("project_id", "role_id", name="uq_project_role"),

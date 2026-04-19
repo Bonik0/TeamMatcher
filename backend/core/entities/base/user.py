@@ -1,4 +1,4 @@
-from pydantic import EmailStr, BaseModel, Field
+from pydantic import EmailStr, BaseModel
 from enum import StrEnum, auto
 
 
@@ -14,4 +14,4 @@ class User(BaseModel):
     patronymic: str | None
     surname: str
     role: UserRoleType
-    hash_password: str 
+    hash_password: str

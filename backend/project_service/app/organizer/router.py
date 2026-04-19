@@ -8,7 +8,7 @@ from app.organizer.schemas import (
     ProjectOut,
     ProjectFormatingIn,
     FindProjectWithTeamsOut,
-    FindOrganizerTeamsOut
+    FindOrganizerTeamsOut,
 )
 from app.organizer.use_cases.create_project_use_case import CreateProjectUseCase
 from app.organizer.use_cases.find_project_use_case import FindProjectUseCase
@@ -19,7 +19,7 @@ from app.organizer.dependencies.use_cases import (
     get_update_project_use_case,
     get_cancel_project_use_case,
     get_start_teams_match_use_case,
-    get_find_teams_use_case
+    get_find_teams_use_case,
 )
 from core.schemas import UpdateUserActionOut, DeleteUserActionOut
 from app.organizer.use_cases.update_project_use_case import UpdateProjectUseCase
@@ -28,9 +28,6 @@ from core.dependencies.postgres import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.dependencies.jwttoken import get_verifier
 from core.entities import UserRoleType
-from core.dependencies.repositories.user import get_user_repository
-from app.organizer.utils import PlanFormatTeamsUtils
-from app.organizer.dependencies.utils import get_formating_teams_utils
 from app.organizer.use_cases.find_teams_use_case import FindTeamsUseCase
 
 
@@ -94,10 +91,6 @@ async def cancel_project(
     return DeleteUserActionOut()
 
 
-
-
-
-
 @router.post("/match")
 async def formating_teams(
     request: Request,
@@ -117,5 +110,8 @@ async def get_project_teams(
 ) -> FindOrganizerTeamsOut:
     projects = await use_case.execute(session, request.state.user_id)
     return FindOrganizerTeamsOut(
-        projects=[FindProjectWithTeamsOut.model_validate(project, from_attributes=True) for project in projects]
+        projects=[
+            FindProjectWithTeamsOut.model_validate(project, from_attributes=True)
+            for project in projects
+        ]
     )

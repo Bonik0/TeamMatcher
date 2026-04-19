@@ -14,22 +14,28 @@ from core.entities.relationship.project import (
     ProjectWithRolesAndCompetences,
     ProjectWithRolesAndForms,
     ProjectWithCompetencesAndUserCompetences,
-    ProjectWithRolesAndTeams
+    ProjectWithRolesAndTeams,
 )
 from core.entities.relationship.project_role import (
     ProjectRoleWithRole,
     ProjectRoleWithRoleAndProjectRoleCompetences,
     ProjectRoleWithCompetencesAndUserCompetences,
     ProjectRoleWithRoleAndForms,
-    ProjectRoleWithCompetences
+    ProjectRoleWithCompetences,
 )
 from core.entities.relationship.project_role_competence import (
     ProjectRoleCompetenceWithCompetence,
-    
 )
 from core.entities.relationship.user_comptence import UserCompetenceWithCompetence
-from core.entities.relationship.user import UserWithCompetences, UserWithForms, UserWithFormsAndCompetences
+from core.entities.relationship.user import (
+    UserWithCompetences,
+    UserWithForms,
+    UserWithFormsAndCompetences,
+)
 from core.entities.base.team import Team
 from core.entities.base.team_member import TeamMember
-from core.entities.relationship.team_member import TeamMemberWithRoleAndUser, TeamMemberWithUser
+from core.entities.relationship.team_member import (
+    TeamMemberWithRoleAndUser,
+    TeamMemberWithUser,
+)
 from core.entities.relationship.team import TeamWithMembersAndProject, TeamWithMembers

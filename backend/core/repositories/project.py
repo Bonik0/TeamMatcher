@@ -5,7 +5,6 @@ from core.models.postgres import (
     ProjectRoleAssociationDB,
     ProjectRoleCompetenceAssociationDB,
     UserProjectRoleAssociationDB,
-    UserDB
 )
 from datetime import datetime
 from sqlalchemy import select, update, delete, func
@@ -19,7 +18,6 @@ from core.entities import (
     ProjectRole,
     ProjectRoleCompetence,
     ProjectWithRolesAndForms,
-    ProjectWithCompetencesAndUserCompetences
 )
 
 
@@ -255,7 +253,6 @@ class SQLAlchemyProjectRepository(IProjectRepository):
         result = await session.execute(query)
         counts = {project_id: count for project_id, count in result.all()}
         return [counts.get(project_id, 0) for project_id in project_ids]
-    
 
     async def create_or_update_role_associations(
         self,
@@ -265,32 +262,25 @@ class SQLAlchemyProjectRepository(IProjectRepository):
     ) -> dict[int, ProjectRole]:
         if not project_roles:
             return {}
-        query = (
-            insert(ProjectRoleAssociationDB)
-            .values(
-                [
-                    {
-                        "project_id": project_id,
-                        "role_id": project_role["role_id"],
-                        "description": project_role["description"],
-                        "quantity_per_team": project_role["quantity_per_team"],
-                    }
-                    for project_role in project_roles
-                ]
-            )
-        )
-        
-        query = (
-            query
-            .on_conflict_do_update(
-                index_elements=["project_id", "role_id"],
-                set_={
-                    "description": query.excluded.description,
-                    "quantity_per_team": query.excluded.quantity_per_team
+        query = insert(ProjectRoleAssociationDB).values(
+            [
+                {
+                    "project_id": project_id,
+                    "role_id": project_role["role_id"],
+                    "description": project_role["description"],
+                    "quantity_per_team": project_role["quantity_per_team"],
                 }
-            )
-            .returning(ProjectRoleAssociationDB)
+                for project_role in project_roles
+            ]
         )
+
+        query = query.on_conflict_do_update(
+            index_elements=["project_id", "role_id"],
+            set_={
+                "description": query.excluded.description,
+                "quantity_per_team": query.excluded.quantity_per_team,
+            },
+        ).returning(ProjectRoleAssociationDB)
 
         result = await session.execute(query)
 
@@ -307,29 +297,22 @@ class SQLAlchemyProjectRepository(IProjectRepository):
     ) -> list[ProjectRoleCompetence]:
         if not role_competencies:
             return []
-        query = (
-            insert(ProjectRoleCompetenceAssociationDB)
-            .values(
-                [
-                    {
-                        "project_role_id": competence["project_role_id"],
-                        "competence_id": competence["competence_id"],
-                        "importance": competence["importance"],
-                    }
-                    for competence in role_competencies
-                ]
-            )
-        )
-        query = (
-            query
-            .on_conflict_do_update(
-                index_elements=["project_role_id", "competence_id"],
-                set_={
-                    "importance": query.excluded.importance,
+        query = insert(ProjectRoleCompetenceAssociationDB).values(
+            [
+                {
+                    "project_role_id": competence["project_role_id"],
+                    "competence_id": competence["competence_id"],
+                    "importance": competence["importance"],
                 }
-            )
-            .returning(ProjectRoleCompetenceAssociationDB)
+                for competence in role_competencies
+            ]
         )
+        query = query.on_conflict_do_update(
+            index_elements=["project_role_id", "competence_id"],
+            set_={
+                "importance": query.excluded.importance,
+            },
+        ).returning(ProjectRoleCompetenceAssociationDB)
 
         result = await session.execute(query)
         return [

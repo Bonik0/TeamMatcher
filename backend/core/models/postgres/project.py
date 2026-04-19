@@ -28,9 +28,7 @@ class ProjectDB(Base):
     roles = one_to_many_relationship(
         "ProjectRoleAssociationDB", back_populates="project"
     )
-    teams = one_to_many_relationship(
-        "TeamDB", back_populates="project"
-    )
+    teams = one_to_many_relationship("TeamDB", back_populates="project")
 
     __table_args__ = (
         Index("ix_projects_status", "status"),

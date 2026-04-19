@@ -5,8 +5,11 @@ from fastapi import HTTPException, status
 from core.interfaces.use_case import IUseCase
 from app.organizer.utils import PlanFormatTeamsUtils
 
+
 class CancelProjectUseCase(IUseCase):
-    def __init__(self, repository: IProjectRepository, utils: PlanFormatTeamsUtils) -> None:
+    def __init__(
+        self, repository: IProjectRepository, utils: PlanFormatTeamsUtils
+    ) -> None:
         self.repository = repository
         self.utils = utils
 

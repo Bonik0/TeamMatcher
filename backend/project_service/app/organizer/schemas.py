@@ -1,4 +1,11 @@
-from pydantic import BaseModel, Field, model_validator, NonNegativeInt, PositiveInt, EmailStr
+from pydantic import (
+    BaseModel,
+    Field,
+    model_validator,
+    NonNegativeInt,
+    PositiveInt,
+    EmailStr,
+)
 from datetime import datetime
 from core.entities import ProjectStatus, Role, Competence, Project, UserRoleType
 from core.schemas import StrXSS
@@ -6,9 +13,8 @@ from core.schemas import StrXSS
 
 class CompetenceIn(BaseModel):
     name: StrXSS
-    importance: int = Field(
-        ge=0, le=10, description="Важность компетенции для роли"
-    )
+    importance: int = Field(ge=0, le=10, description="Важность компетенции для роли")
+
 
 class RoleIn(BaseModel):
     name: StrXSS
@@ -50,7 +56,8 @@ class ProjectUpdateIn(ProjectCreateIn):
 
 class ProjectCancelIn(BaseModel):
     project_id: NonNegativeInt
-    
+
+
 class ProjectFormatingIn(BaseModel):
     project_id: NonNegativeInt
 
@@ -60,9 +67,7 @@ class ProjectCreateOut(BaseModel):
 
 
 class ProjectRoleCompetenceOut(BaseModel):
-    importance: int = Field(
-        ge=0, le=10, description="Важность компетенции для роли"
-    )
+    importance: int = Field(ge=0, le=10, description="Важность компетенции для роли")
     competence: Competence
 
 
@@ -89,8 +94,6 @@ class ProjectFindOut(BaseModel):
     projects: list[ProjectOut]
 
 
-
-
 class FindUserOut(BaseModel):
     id: int
     email: EmailStr
@@ -100,35 +103,33 @@ class FindUserOut(BaseModel):
     role: UserRoleType
 
 
-
 class FindProjectRoleOut(BaseModel):
     id: int
 
     description: str | None
     quantity_per_team: int
-    
+
     role: Role
-    
-    
+
+
 class FindTeamMemberOut(BaseModel):
     id: int
     project_role_id: int
     competence_match: float
     role_score: float
-    
+
     user: FindUserOut
-    
-    
+
+
 class FindTeamOut(BaseModel):
     id: int
     name: str
     members: list[FindTeamMemberOut]
-    
+
 
 class FindProjectWithTeamsOut(Project):
     roles: list[FindProjectRoleOut]
     teams: list[FindTeamOut]
-
 
 
 class FindOrganizerTeamsOut(BaseModel):

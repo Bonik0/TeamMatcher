@@ -13,7 +13,7 @@ class BaseProjectUseCase(IUseCase):
         project: IProjectRepository,
         role: IRoleRepository,
         competence: ICompetenceRepository,
-        utils: PlanFormatTeamsUtils
+        utils: PlanFormatTeamsUtils,
     ) -> None:
         self.project = project
         self.role = role
@@ -47,7 +47,7 @@ class BaseProjectUseCase(IUseCase):
             project_id=project_id,
             project_roles=project_roles,
         )
-        
+
         await self.project.delete_role_competence_associations(
             session, [project_role.id for project_role in project_roles_map.values()]
         )

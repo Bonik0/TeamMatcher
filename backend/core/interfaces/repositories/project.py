@@ -75,12 +75,11 @@ class IProjectRepository(Protocol):
         self, session: AsyncSession, role_competencies: list[dict[str, int | float]]
     ) -> list[ProjectRoleCompetence]:
         pass
-    
+
     async def delete_role_competence_associations(
         self, session: AsyncSession, project_role_ids: list[int]
     ) -> None:
         pass
-
 
     async def get_user_forms_count(
         self, session: AsyncSession, project_ids: list[int]
