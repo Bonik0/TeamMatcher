@@ -92,9 +92,9 @@ class SQLAlchemyRoleRepository(IRoleRepository):
         query = delete(UserProjectRoleAssociationDB).where(
             UserProjectRoleAssociationDB.user_id == user_id,
             UserProjectRoleAssociationDB.project_role_id.in_(
-                select(ProjectRoleAssociationDB.id)
+                select(ProjectRoleAssociationDB)
                 .where(ProjectRoleAssociationDB.project_id == project_id)
-                .subquery()
+                .with_only_columns(ProjectRoleAssociationDB.id)
             ),
         )
         await session.execute(query)

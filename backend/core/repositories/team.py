@@ -88,9 +88,9 @@ class TeamRepository(ITeamRepository):
             select(TeamDB)
             .where(
                 TeamDB.id.in_(
-                    select(TeamMemberDB.team_id)
+                    select(TeamMemberDB)
                     .where(TeamMemberDB.user_id == user_id)
-                    .subquery()
+                    .with_only_columns(TeamMemberDB.team_id)
                 )
             )
             .options(
