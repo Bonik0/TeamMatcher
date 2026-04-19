@@ -1,0 +1,10 @@
+fastapi[all]
+aiohttp
+sqlalchemy
+asyncpg
+sqlalchemy-utils
+redis
+pyjwt
+faststream
+aio-pika
+bcrypt

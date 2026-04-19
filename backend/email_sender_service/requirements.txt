@@ -1,0 +1,4 @@
+fastapi[all]
+aiohttp
+faststream
+aio-pika

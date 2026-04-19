@@ -1,0 +1,40 @@
+export const styles = {
+    tagButton: {
+      fontSize: '1.2rem',
+      display: 'inline-block',
+      margin: '0.5rem',
+      padding: '0.8rem 1.2rem',
+      borderRadius: '20px',
+      border : '2px solid #e0e0e0',
+      color: 'white',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease'
+    },
+    saveButton: {
+      position: 'fixed',
+      bottom: '2rem',
+      left: '50%',
+      transform: 'translateX(-50%)',
+      backgroundColor: '#4CAF50',
+      color: 'white',
+      padding: '1rem 2rem',
+      borderRadius: '25px',
+      border : '2px solid #e0e0e0',
+      cursor: 'pointer',
+      fontSize: '1.5rem',
+      boxShadow: '0 2px 10px rgba(0,0,0,0.2)',
+      transition: 'all 0.2s ease'
+    },
+    moreButton: {
+      fontSize: '1.2rem',
+      display: 'inline-block',
+      margin: '0.5rem',
+      padding: '0.8rem 1.2rem',
+      borderRadius: '20px',
+      backgroundColor: '#f0f8ff',
+      color: '#1e90ff',
+      border: '2px solid #1e90ff',
+      cursor: 'pointer',
+      transition: 'all 0.2s ease',
+    },
+  };
