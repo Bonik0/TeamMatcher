@@ -92,13 +92,14 @@ services:
     env_file:
       - ./configs/rabbitmq_connection.env
       - ./configs/email_sender_service.env
+      - ./configs/nt.env
     networks:
       - backend-network
       - frontend-network
 
   email-service:
     build: ./backend/email_service
-    command: "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload"
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
     ports:
       - 8003:8000
     volumes:
@@ -115,10 +116,11 @@ services:
       - ./configs/redis_connection.env
       - ./configs/email_service.env
       - ./configs/rabbitmq_connection.env
+      - ./configs/nt.env
 
   auth-service:
     build: ./backend/auth_service
-    command: "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload"
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
     ports:
       - 8005:8000
     volumes:
@@ -138,11 +140,12 @@ services:
       - ./configs/redis_connection.env
       - ./configs/auth_service.env
       - ./configs/rabbitmq_connection.env
+      - ./configs/nt.env
 
   
   project-service:
     build: ./backend/project_service
-    command: "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload"
+    command: "uvicorn app.main:app --workers 3 --host 0.0.0.0 --port 8000"
     ports:
       - 8006:8000
     volumes:
@@ -158,10 +161,11 @@ services:
       - ./configs/auth_service_connection.env
       - ./configs/rabbitmq_connection.env
       - ./configs/redis_connection.env
+      - ./configs/nt.env
 
   search-service:
     build: ./backend/search_service
-    command: "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload"
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
     ports:
       - 8007:8000
     volumes:
@@ -174,10 +178,11 @@ services:
       - backend-network
     env_file:
       - ./configs/postgres_connection.env
+      - ./configs/nt.env
 
   user-service:
     build: ./backend/user_service
-    command: "uvicorn app.main:app --workers 1 --host 0.0.0.0 --port 8000 --reload"
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
     ports:
       - 8008:8000
     volumes:
@@ -191,7 +196,7 @@ services:
     env_file:
       - ./configs/postgres_connection.env
       - ./configs/auth_service_connection.env
-
+      - ./configs/nt.env
   
   match-service:
     build: ./backend/project_service
@@ -215,6 +220,7 @@ services:
       - ./configs/rabbitmq_connection.env
       - ./configs/redis_connection.env
       - ./configs/match_service.env
+      - ./configs/nt.env
 
   flower:
     build: ./backend/project_service
@@ -257,24 +263,22 @@ services:
   #    - frontend-network
 
 
-  #nginx:
-  #  image: nginx:latest
-  #  ports:
-  #    - 8000:8080
-  #  depends_on:
-  #    postgres:
-  #      condition: service_healthy
-  #    redis:
-  #      condition: service_healthy
-  #    rabbitmq:
-  #      condition: service_healthy
-  #    mongo:
-  #      condition: service_healthy
-  #  volumes:
-  #    - ./configs/nginx_config.conf:/etc/nginx/conf.d/default.conf
-  #  networks:
-  #    - backend-network
-  #    - frontend-network
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8000:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./configs/nginx_config.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - backend-network
+      - frontend-network
 
 
 networks:

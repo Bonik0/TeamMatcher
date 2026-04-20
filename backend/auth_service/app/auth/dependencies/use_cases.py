@@ -1,5 +1,6 @@
 from fastapi import Depends
 import logging
+import os
 from core.interfaces.repositories.user import IUserRepository
 from core.interfaces.repositories.hashing import IHashingRepository
 from core.interfaces.repositories.user_verification import IUserVerificationRepository
@@ -16,8 +17,13 @@ def get_register_use_case(
     hashing: IHashingRepository = Depends(get_hasing_repository),
     verification: IUserVerificationRepository = Depends(get_verification_repository),
 ) -> RegisterUserUseCase:
+    need_verification = os.getenv("NT") != "TRUE"
     return RegisterUserUseCase(
-        repository, hashing, verification, logging.getLogger("Register")
+        repository,
+        hashing,
+        verification,
+        need_verification,
+        logging.getLogger("Register"),
     )
 
 
@@ -33,6 +39,11 @@ def get_change_password_user_case(
     hashing: IHashingRepository = Depends(get_hasing_repository),
     verification: IUserVerificationRepository = Depends(get_verification_repository),
 ) -> ChangePasswordUseCase:
+    need_verification = os.getenv("NT") != "TRUE"
     return ChangePasswordUseCase(
-        repository, hashing, verification, logging.getLogger("ChangePassword")
+        repository,
+        hashing,
+        verification,
+        need_verification,
+        logging.getLogger("ChangePassword"),
     )

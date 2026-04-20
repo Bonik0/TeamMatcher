@@ -70,7 +70,7 @@ async def test_match_users_logs_and_returns_when_no_users() -> None:
     await use_case.execute(session, project_id=1)
 
     logger.info.assert_any_call("No users data")
-    project_repo.update_status.assert_not_awaited()
+    project_repo.update_status.assert_awaited_once()
 
 
 @pytest.mark.asyncio

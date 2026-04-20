@@ -7,13 +7,15 @@ from core.rate_limiter import RateLimitMiddleware, EndpointConfig
 from core.dependencies.rate_limiter import get_rate_limiter_use_case
 import logging
 from app.auth.utils import login_key_executor
-
+import os
 
 app = FastAPI(
     root_path="/api/auth",
 )
 
 set_default_cors_policy(app)
+
+LOG_LEVEL = logging.INFO if (os.getenv("NT") != "TRUE") else logging.DEBUG
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"

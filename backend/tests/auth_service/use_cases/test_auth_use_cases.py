@@ -62,7 +62,7 @@ async def test_register_user_branches_and_success():
     )
 
     repo.get_by_email = AsyncMock(return_value=SimpleNamespace(id=1))
-    use_case = RegisterUserUseCase(repo, hashing, verification, logger)
+    use_case = RegisterUserUseCase(repo, hashing, verification, True, logger)
     session = AsyncMock()
     with pytest.raises(HTTPException):
         await use_case.execute(session, cred, UserRoleType.user)
@@ -90,7 +90,7 @@ async def test_change_password_branches_and_success():
     logger = MagicMock()
     session = AsyncMock()
 
-    use_case = ChangePasswordUseCase(repo, hashing, verification, logger)
+    use_case = ChangePasswordUseCase(repo, hashing, verification, True, logger)
 
     repo.get_by_email = AsyncMock(return_value=None)
     with pytest.raises(HTTPException):

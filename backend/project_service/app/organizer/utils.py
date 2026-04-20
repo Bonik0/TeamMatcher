@@ -25,7 +25,8 @@ class PlanFormatTeamsUtils:
 
     async def cancel(self, project_id: int) -> None:
         task_id = await self.client.get(self._get_team_format_key(project_id))
-        app.control.revoke(task_id.decode(), terminate=True, signal="SIGKILL")
+        if task_id:
+            app.control.revoke(task_id.decode(), terminate=True, signal="SIGKILL")
 
     async def update(self, project_id: int, start_time: datetime) -> None:
         await self.cancel(project_id)

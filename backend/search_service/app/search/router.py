@@ -24,7 +24,6 @@ from app.search.use_cases.find_project_by_id_use_case import FindProjectByIdUseC
 
 
 router = APIRouter(
-    prefix="/search",
     tags=["Search"],
 )
 

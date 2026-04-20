@@ -1,10 +1,11 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncAttrs
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from core.models.postgres.config import get_db_url
+import os
 
-
+ENGINE_ECHO = os.getenv("NT") != "TRUE"
 DATABASE_URL = get_db_url()
-engine = create_async_engine(DATABASE_URL, echo=True)
+engine = create_async_engine(DATABASE_URL, echo=ENGINE_ECHO)
 sync_session_maker = sessionmaker()
 async_session_maker = async_sessionmaker(engine, sync_session_class=sync_session_maker)
 

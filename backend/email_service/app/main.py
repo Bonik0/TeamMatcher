@@ -6,13 +6,18 @@ from core.dependencies.rate_limiter import get_rate_limiter_use_case
 import logging
 from app.email_verify.utils import email_verify_key_executor
 from core.models.rabbitmq import rabbitmq_router
+import os
+
 
 app = FastAPI(
     root_path="/api/email",
 )
 
+LOG_LEVEL = logging.INFO if (os.getenv("NT") != "TRUE") else logging.DEBUG
+
+
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=LOG_LEVEL, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 rate_limit_logger = logging.getLogger("Rate Limit")

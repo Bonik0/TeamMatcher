@@ -1,0 +1,31 @@
+id,name,organizer_id,description,status,start_time
+1,AI Hackathon Platform,90,Платформа для проведения AI-хакатонов,recruiting,2026-06-01 10:00:00
+2,FinTech Challenge,91,Разработка финтех решений на основе API банков,recruiting,2026-06-05 12:00:00
+3,HealthTech Sprint,92,Цифровые решения для здравоохранения,recruiting,2026-06-10 09:00:00
+4,Smart City Hack,93,Разработка сервисов умного города,recruiting,2026-06-12 10:00:00
+5,EdTech Hackathon,94,Образовательные платформы нового поколения,recruiting,2026-06-15 11:00:00
+6,CyberSecurity Battle,95,Поиск уязвимостей и защита систем,recruiting,2026-06-18 10:00:00
+7,Blockchain Hack,96,Решения на базе блокчейн технологий,recruiting,2026-06-20 13:00:00
+8,AI Vision Contest,97,Компьютерное зрение и нейросети,recruiting,2026-06-22 10:00:00
+9,Cloud Native Hack,98,Облачные и микросервисные решения,recruiting,2026-06-25 11:00:00
+10,GameDev Jam,99,Разработка игр за 48 часов,recruiting,2026-06-28 14:00:00
+11,Mobile App Sprint,100,Создание мобильных приложений,recruiting,2026-07-01 10:00:00
+12,Data Science Bootcamp,90,Анализ данных и ML модели,recruiting,2026-07-03 09:00:00
+13,DevOps Challenge,91,Автоматизация инфраструктуры,recruiting,2026-07-05 10:00:00
+14,AR VR Hackathon,92,Дополненная и виртуальная реальность,recruiting,2026-07-07 12:00:00
+15,GreenTech Hack,93,Экологические IT решения,recruiting,2026-07-10 09:00:00
+16,IoT Hackathon,94,Интернет вещей и сенсоры,recruiting,2026-07-12 11:00:00
+17,Startup Weekend IT,95,Прототипирование стартапов,recruiting,2026-07-15 10:00:00
+18,AI Chatbot Hack,96,Разработка чат-ботов,recruiting,2026-07-18 10:00:00
+19,Open Source Sprint,97,Контрибьюция в open source,recruiting,2026-07-20 09:00:00
+20,Big Data Hack,98,Обработка больших данных,recruiting,2026-07-22 10:00:00
+21,Legacy System Refactor,99,Модернизация старых систем,recruiting,2026-07-25 10:00:00
+22,AI Healthcare MVP,100,Прототип AI для медицины,recruiting,2026-07-27 11:00:00
+23,Fintech Analytics Tool,90,Аналитика финансовых данных,recruiting,2026-07-29 12:00:00
+24,Smart Parking System,91,Умные парковки,recruiting,2026-08-01 10:00:00
+25,E-learning Platform,92,Онлайн обучение,recruiting,2026-08-03 09:00:00
+26,Cyber Defense Tool,93,Инструменты защиты,recruiting,2026-08-05 11:00:00
+27,Blockchain Wallet,94,Крипто кошелёк,recruiting,2026-08-07 10:00:00
+28,Cloud Monitoring System,95,Мониторинг облаков,recruiting,2026-08-10 12:00:00
+29,Game AI Engine,96,ИИ для игр,recruiting,2026-08-12 10:00:00
+30,Mobile Banking App,97,Мобильный банк,recruiting,2026-08-15 11:00:00

@@ -4,6 +4,8 @@ import logging
 from app.user_competence.router import router as user_competence_router
 from app.user_role.router import router as user_role_router
 from app.user_team.router import router as team_router
+import os
+
 
 app = FastAPI(
     root_path="/api/user",
@@ -11,8 +13,10 @@ app = FastAPI(
 
 set_default_cors_policy(app)
 
+LOG_LEVEL = logging.INFO if (os.getenv("NT") != "TRUE") else logging.DEBUG
+
 logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    level=LOG_LEVEL, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
 
 

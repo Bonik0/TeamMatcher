@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import Index, Integer, UniqueConstraint
+from sqlalchemy import Index, Integer
 from core.models.postgres.column_types import (
     created_at_type,
     updated_at_type,
@@ -18,7 +18,7 @@ class UserProjectRoleAssociationDB(Base):
     project_role_id: Mapped[int] = mapped_column(
         Integer, cascade_foreign_key("project_roles.id"), primary_key=True
     )
-    priority: Mapped[int]
+    priority: Mapped[int] = mapped_column(Integer, primary_key=True)
     created_at: Mapped[created_at_type]
     updated_at: Mapped[updated_at_type]
 
@@ -27,7 +27,4 @@ class UserProjectRoleAssociationDB(Base):
         "ProjectRoleAssociationDB", back_populates="forms"
     )
 
-    __table_args__ = (
-        Index("ix_project_users_project_role_id", "project_role_id"),
-        UniqueConstraint("user_id", "project_role_id", name="uq_project_users"),
-    )
+    __table_args__ = (Index("ix_project_users_project_role_id", "project_role_id"),)

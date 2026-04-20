@@ -23,6 +23,11 @@ class MatchUsersUseCase(IUseCase):
         self.match_utils = match_utils
         self.logger = logger
 
+    async def _change_project_status(
+        self, session: AsyncSession, project_id: int, status: ProjectStatus
+    ) -> None:
+        await self.project_repository.update_status(session, project_id, status)
+
     async def execute(self, session: AsyncSession, project_id: int) -> None:
         project = await self.project_repository.get_by_id(session, project_id)
         users = await self.user_repository.get_with_priorities_and_competences(
@@ -35,15 +40,17 @@ class MatchUsersUseCase(IUseCase):
 
         if not users:
             self.logger.info("No users data")
+            await self._change_project_status(
+                session, project_id, ProjectStatus.COMPLETED
+            )
+            await session.commit()
             return
 
         self.logger.info(f"{project=}")
         self.logger.info("Users for format by project:\n")
         self.logger.info("\n".join([user.model_dump_json(indent=1) for user in users]))
 
-        await self.project_repository.update_status(
-            session, project_id, ProjectStatus.FORMATED
-        )
+        await self._change_project_status(session, project_id, ProjectStatus.FORMATED)
         await session.commit()
 
         teams = self.match_utils.execute(users, project.roles)
@@ -57,9 +64,7 @@ class MatchUsersUseCase(IUseCase):
             )
         )
 
-        await self.project_repository.update_status(
-            session, project_id, ProjectStatus.COMPLETED
-        )
+        await self._change_project_status(session, project_id, ProjectStatus.COMPLETED)
         await self.team_repository.create_bulk(
             session,
             [

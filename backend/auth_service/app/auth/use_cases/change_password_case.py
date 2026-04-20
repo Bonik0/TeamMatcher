@@ -16,11 +16,13 @@ class ChangePasswordUseCase(IUseCase):
         repository: IUserRepository,
         hashing: IHashingRepository,
         verification: IUserVerificationRepository,
+        need_verification: bool,
         logger: logging.Logger,
     ) -> None:
         self.repository = repository
         self.hashing = hashing
         self.verification = verification
+        self.need_verification = need_verification
         self.logger = logger
 
     async def execute(
@@ -39,7 +41,7 @@ class ChangePasswordUseCase(IUseCase):
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=f"User with email {email} not found",
             )
-        if not is_verified:
+        if self.need_verification and not is_verified:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="you need to pass verification in one of the ways",
