@@ -1,0 +1,7 @@
+fastapi[all]
+sqlalchemy
+alembic
+asyncpg
+sqlalchemy-utils
+alembic_utils
+pandas

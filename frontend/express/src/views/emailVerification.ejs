@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head> 
+    <style>
+      .container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 20px;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+      }
+      
+      .header {
+        color: #333;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 10px;
+      }
+      
+      .content {
+        margin: 20px 0;
+      }
+      
+      .code-box {
+        background-color: #f5f5f5;
+        padding: 15px;
+        margin: 20px 0;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        border-radius: 4px;
+      }
+      
+      .warning {
+        color: #ff4444;
+        margin: 15px 0;
+      }
+      
+      .reset-link {
+        color: #ff4444;
+    
+      }
+        
+    </style>
+    
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="header">Team Matcher verification code</h1>
+
+      <div class="content">
+        To verify your account, enter this code in App:
+        <div class="code-box">
+          <%= code %>
+        </div>
+
+        <p class="warning">
+          If you were not trying to log in to Team Matcher, please ignore message
+        </p>
+
+      </div>
+
+    </div>
+  </body>
+</html>

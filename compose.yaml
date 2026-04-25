@@ -1,0 +1,291 @@
+
+
+services:
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    ports:
+    - 5435:5432
+    env_file:
+      ./configs/postgres.env
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p $$POSTGRES_PORT"]
+      interval: 10s
+      retries: 5
+      start_period: 1s
+      timeout: 5s
+      
+        
+  migrations:
+    build: ./backend/migration_service
+    command: ["sh", "-c", "./entrypoint.sh"]
+    volumes:
+      - ./backend/migration_service/migration:/code/migration
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/migration.env
+
+
+  redis:
+    image: redis:latest
+    env_file:
+      - ./configs/redis.env
+    command: ["sh", "-c", "redis-server --loglevel debug --port $$REDIS_PORT --requirepass $$REDIS_PASSWORD"]
+    networks:
+      - backend-network
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -p $$REDIS_PORT -a $$REDIS_PASSWORD ping | grep PONG"]
+      interval: 10s
+      retries: 5
+      start_period: 1s
+      timeout: 5s
+    
+  redis-commander:
+    image: ghcr.io/joeferner/redis-commander:latest
+    restart: always
+    ports:
+    - 8001:8081
+    env_file:
+      - ./configs/redis_connection.env
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-network
+
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: rabbitmq
+    restart: unless-stopped
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      retries: 5
+      start_period: 1s
+      timeout: 5s
+    env_file:
+      - ./configs/rabbitmq.env
+    ports:
+      - 15672:15672
+    networks:
+      - backend-network
+
+  email-sender-service:
+    build: ./backend/email_sender_service
+    command: faststream run "app.main:app" --workers 5
+    volumes:
+      - ./backend/core:/code/core
+      - ./backend/email_sender_service/app:/code/app
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    env_file:
+      - ./configs/rabbitmq_connection.env
+      - ./configs/email_sender_service.env
+      - ./configs/nt.env
+    networks:
+      - backend-network
+      - frontend-network
+
+  email-service:
+    build: ./backend/email_service
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
+    ports:
+      - 8003:8000
+    volumes:
+      - ./backend/email_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/redis_connection.env
+      - ./configs/email_service.env
+      - ./configs/rabbitmq_connection.env
+      - ./configs/nt.env
+
+  auth-service:
+    build: ./backend/auth_service
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
+    ports:
+      - 8005:8000
+    volumes:
+      - ./backend/auth_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/redis_connection.env
+      - ./configs/auth_service.env
+      - ./configs/rabbitmq_connection.env
+      - ./configs/nt.env
+
+  
+  project-service:
+    build: ./backend/project_service
+    command: "uvicorn app.main:app --workers 3 --host 0.0.0.0 --port 8000"
+    ports:
+      - 8006:8000
+    volumes:
+      - ./backend/project_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/auth_service_connection.env
+      - ./configs/rabbitmq_connection.env
+      - ./configs/redis_connection.env
+      - ./configs/nt.env
+
+  search-service:
+    build: ./backend/search_service
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
+    ports:
+      - 8007:8000
+    volumes:
+      - ./backend/search_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/nt.env
+
+  user-service:
+    build: ./backend/user_service
+    command: "uvicorn app.main:app --workers 5 --host 0.0.0.0 --port 8000"
+    ports:
+      - 8008:8000
+    volumes:
+      - ./backend/user_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/auth_service_connection.env
+      - ./configs/nt.env
+  
+  match-service:
+    build: ./backend/project_service
+    command: "celery -A app.match.router:app worker --loglevel=info"
+    ports:
+      - 8009:8000
+    volumes:
+      - ./backend/project_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/postgres_connection.env
+      - ./configs/rabbitmq_connection.env
+      - ./configs/redis_connection.env
+      - ./configs/match_service.env
+      - ./configs/nt.env
+
+  flower:
+    build: ./backend/project_service
+    command: "celery -A app.match.router:app flower --port=5555"
+    ports:
+      - "5555:5555"                  
+    volumes:
+      - ./backend/project_service/app:/code/app
+      - ./backend/core:/code/core
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backend-network
+    env_file:
+      - ./configs/rabbitmq_connection.env
+      - ./configs/redis_connection.env
+      - ./configs/match_service.env
+
+  express:
+    build: ./frontend/express
+    command: node server.js
+    volumes:
+     - ./frontend/express:/app
+    env_file:
+      - ./configs/express.env
+    networks:
+      - frontend-network
+
+  react:
+    build: ./frontend/react
+    volumes:
+     - ./frontend/react:/app
+    command: npm start
+    env_file:
+      - ./configs/frontend.env
+    ports:
+      - 3000:3000
+    networks:
+      - frontend-network
+
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - 8000:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    volumes:
+      - ./configs/nginx_config.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - backend-network
+      - frontend-network
+
+
+networks:
+  backend-network:
+    driver: bridge
+
+  frontend-network:
+    driver: bridge
