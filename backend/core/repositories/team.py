@@ -1,5 +1,5 @@
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload
+from sqlalchemy.orm import selectinload, contains_eager
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.dialects.postgresql import insert
 from core.models.postgres import (
@@ -11,17 +11,16 @@ from core.models.postgres import (
 from core.interfaces.repositories.team import ITeamRepository
 from typing import Any
 from core.entities import (
-    TeamWithMembersAndProject,
     ProjectStatus,
     ProjectWithRolesAndTeams,
 )
 
 
 class TeamRepository(ITeamRepository):
-    def _parse_teams(self, teams: list[TeamDB]) -> list[TeamWithMembersAndProject]:
+    def _parse_teams(self, projects: list[ProjectDB]) -> list[ProjectWithRolesAndTeams]:
         return [
-            TeamWithMembersAndProject.model_validate(team, from_attributes=True)
-            for team in teams
+            ProjectWithRolesAndTeams.model_validate(project, from_attributes=True)
+            for project in projects
         ]
 
     async def create_bulk(
@@ -73,36 +72,29 @@ class TeamRepository(ITeamRepository):
                     ProjectRoleAssociationDB.role
                 ),
             )
+            .order_by(ProjectDB.start_time.desc())
         )
         result = await session.execute(query)
-        return [
-            ProjectWithRolesAndTeams.model_validate(project, from_attributes=True)
-            for project in result.scalars().all()
-        ]
+        return self._parse_teams(result.scalars().all())
 
     async def get_by_user_id(
         self, session: AsyncSession, user_id: int
-    ) -> list[TeamWithMembersAndProject]:
+    ) -> list[ProjectWithRolesAndTeams]:
 
         query = (
-            select(TeamDB)
-            .where(
-                TeamDB.id.in_(
-                    select(TeamMemberDB)
-                    .where(TeamMemberDB.user_id == user_id)
-                    .with_only_columns(TeamMemberDB.team_id)
-                )
-            )
+            select(ProjectDB)
+            .join(ProjectDB.teams)
+            .join(TeamDB.members)
+            .where(TeamMemberDB.user_id == user_id)
             .options(
-                selectinload(TeamDB.members).selectinload(TeamMemberDB.user),
-                selectinload(TeamDB.project),
-                selectinload(TeamDB.members)
-                .selectinload(TeamMemberDB.project_role)
-                .selectinload(ProjectRoleAssociationDB.role),
+                contains_eager(ProjectDB.teams)
+                .selectinload(TeamDB.members)
+                .selectinload(TeamMemberDB.user),
+                selectinload(ProjectDB.roles).selectinload(
+                    ProjectRoleAssociationDB.role
+                ),
             )
+            .order_by(ProjectDB.start_time.desc())
         )
         result = await session.execute(query)
-        return [
-            TeamWithMembersAndProject.model_validate(team, from_attributes=True)
-            for team in result.scalars().all()
-        ]
+        return self._parse_teams(result.scalars().unique().all())

@@ -49,6 +49,7 @@ class ProjectOut(BaseModel):
     status: ProjectStatus
     start_time: datetime
     user_forms_count: int
+    organizer_id: int
     roles: list[ProjectRoleOut]
 
 

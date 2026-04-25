@@ -196,7 +196,8 @@ async def test_rate_limit_middleware_returns_429_for_blocked_request() -> None:
 
     assert result.status_code == 429
     assert json.loads(result.body.decode()) == {
-        "detail": "Too Many Requests. Please try again in 33 seconds"
+        "detail": "Too Many Requests. Please try again in 33 seconds",
+        "block_time": 33,
     }
     call_next.assert_not_awaited()
 

@@ -252,15 +252,17 @@ services:
     networks:
       - frontend-network
 
-  #react:
-  #  build: ./frontend/random-coffe
-  #  volumes:
-  #   - ./frontend/random-coffe:/app
-  #  command: npm start
-  #  ports:
-  #    - 3000:3000
-  #  networks:
-  #    - frontend-network
+  react:
+    build: ./frontend/react
+    volumes:
+     - ./frontend/react:/app
+    command: npm start
+    env_file:
+      - ./configs/frontend.env
+    ports:
+      - 3000:3000
+    networks:
+      - frontend-network
 
 
   nginx:

@@ -53,7 +53,8 @@ class RateLimitMiddleware(BaseHTTPMiddleware):
             return JSONResponse(
                 status_code=status.HTTP_429_TOO_MANY_REQUESTS,
                 content={
-                    "detail": f"Too Many Requests. Please try again in {block_ttl} seconds"
+                    "detail": f"Too Many Requests. Please try again in {block_ttl} seconds",
+                    "block_time": block_ttl,
                 },
             )
 

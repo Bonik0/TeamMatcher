@@ -20,7 +20,7 @@ class LoginUserUseCase(IUseCase):
         user = await self.repository.get_by_email(session, credentials.email)
         if user is None:
             raise HTTPException(
-                status_code=status.HTTP_400_BAD_REQUEST,
+                status_code=status.HTTP_404_NOT_FOUND,
                 detail=f"User with email {credentials.email} not found",
             )
         if not self.hashing.verify_password(credentials.password, user.hash_password):

@@ -32,4 +32,5 @@ class StartTeamsMatchUseCase(IUseCase):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Is not your project"
             )
+        await self.repository.update_status(session, project_id, ProjectStatus.FORMATED)
         await self.utils.update(project.id, datetime.now().replace(tzinfo=None))

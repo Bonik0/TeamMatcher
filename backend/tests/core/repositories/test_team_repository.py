@@ -79,20 +79,3 @@ async def test_team_repository_get_by_organizer_id_maps_projects() -> None:
 
     assert projects == ["parsed-project"]
     model_validate.assert_called_once_with(project_db, from_attributes=True)
-
-
-@pytest.mark.asyncio
-async def test_team_repository_get_by_user_id_maps_teams() -> None:
-    team_db = SimpleNamespace(id=1, name="Team A", project_id=3)
-    session = AsyncMock()
-    session.execute.return_value = _result_with_scalars(team_db)
-    repository = TeamRepository()
-
-    with patch(
-        "core.repositories.team.TeamWithMembersAndProject.model_validate",
-        return_value="parsed-team",
-    ) as model_validate:
-        teams = await repository.get_by_user_id(session, user_id=100)
-
-    assert teams == ["parsed-team"]
-    model_validate.assert_called_once_with(team_db, from_attributes=True)

@@ -23,3 +23,12 @@ async def test_login_key_executor_empty_if_no_email():
 
     keys = await login_key_executor(req)
     assert keys == []
+
+
+@pytest.mark.asyncio
+async def test_login_key_executor_empty_if_no_body():
+    req = SimpleNamespace()
+    req.url = SimpleNamespace(path="/login")
+
+    keys = await login_key_executor(req)
+    assert keys == []

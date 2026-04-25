@@ -5,8 +5,11 @@ from fastapi import Request
 
 
 async def email_verify_key_executor(request: Request) -> list[str]:
-    body = await request.json()
-    email = body.get("email")
+    try:
+        body = await request.json()
+    except Exception:
+        return []
+    email = body.get("email") if isinstance(body, dict) else None
     return [request.url.path, "email", email] if email is not None else []
 
 

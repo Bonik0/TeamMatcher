@@ -144,7 +144,7 @@ class SQLAlchemyProjectRepository(IProjectRepository):
                 .selectinload(ProjectRoleAssociationDB.competences)
                 .selectinload(ProjectRoleCompetenceAssociationDB.competence),
             )
-            .order_by(ProjectDB.id.desc())
+            .order_by(ProjectDB.updated_at.desc())
         )
 
         return self._parse_projects_with_roles_and_competences(result.scalars().all())
@@ -218,16 +218,21 @@ class SQLAlchemyProjectRepository(IProjectRepository):
         query = (
             select(ProjectDB)
             .join(ProjectDB.roles)
-            .join(ProjectRoleAssociationDB.forms)
+            .join(
+                UserProjectRoleAssociationDB,
+                UserProjectRoleAssociationDB.project_role_id
+                == ProjectRoleAssociationDB.id,
+            )
             .where(UserProjectRoleAssociationDB.user_id == user_id)
             .options(
                 contains_eager(ProjectDB.roles).contains_eager(
                     ProjectRoleAssociationDB.forms
                 ),
-                contains_eager(ProjectDB.roles).contains_eager(
+                contains_eager(ProjectDB.roles).selectinload(
                     ProjectRoleAssociationDB.role
                 ),
             )
+            .order_by(UserProjectRoleAssociationDB.updated_at.desc())
         )
         result = await session.execute(query)
         return self._parse_project_with_roles_and_forms(result.scalars().unique().all())

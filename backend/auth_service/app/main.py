@@ -13,8 +13,6 @@ app = FastAPI(
     root_path="/api/auth",
 )
 
-set_default_cors_policy(app)
-
 LOG_LEVEL = logging.INFO if (os.getenv("NT") != "TRUE") else logging.DEBUG
 
 logging.basicConfig(
@@ -29,13 +27,13 @@ endpoint_configs = {
     ),
 }
 
-
-set_default_cors_policy(app)
 app.add_middleware(
     RateLimitMiddleware,
     rate_limit_use_case=get_rate_limiter_use_case(rate_limit_logger),
     endpoint_configs=endpoint_configs,
 )
+set_default_cors_policy(app)
+
 
 app.include_router(auth_router)
 app.include_router(jwttoken_router)

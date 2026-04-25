@@ -197,8 +197,8 @@ class ProjectServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        self.client.delete(
-            "/", json=payload, headers=headers, name="/organizer/ (cancel)"
+        self.client.post(
+            "/cancel", json=payload, headers=headers, name="/organizer/ (cancel)"
         )
         self.project_id = None
         self.roles = None

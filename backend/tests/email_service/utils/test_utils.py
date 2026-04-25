@@ -30,6 +30,15 @@ async def test_email_verify_key_executor_returns_empty_when_no_email() -> None:
     assert keys == []
 
 
+@pytest.mark.asyncio
+async def test_email_verify_key_executor_returns_if_no_body() -> None:
+    req = SimpleNamespace()
+    req.url = SimpleNamespace(path="/verify")
+
+    keys = await email_verify_key_executor(req)
+    assert keys == []
+
+
 def test_email_verify_utils_generates_code_in_range_and_operation_id(
     monkeypatch,
 ) -> None:

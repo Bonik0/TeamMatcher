@@ -1,7 +1,7 @@
 from core.interfaces.use_case import IUseCase
 from core.interfaces.repositories.team import ITeamRepository
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.entities import TeamWithMembersAndProject
+from core.entities import ProjectWithRolesAndTeams
 
 
 class FindUserTeamsUseCase(IUseCase):
@@ -10,5 +10,5 @@ class FindUserTeamsUseCase(IUseCase):
 
     async def execute(
         self, session: AsyncSession, user_id: int
-    ) -> list[TeamWithMembersAndProject]:
+    ) -> list[ProjectWithRolesAndTeams]:
         return await self.repository.get_by_user_id(session, user_id)

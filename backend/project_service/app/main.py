@@ -18,6 +18,4 @@ logging.basicConfig(
 )
 
 
-set_default_cors_policy(app)
-
 app.include_router(organizer_router)

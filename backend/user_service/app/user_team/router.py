@@ -6,7 +6,7 @@ from core.dependencies.jwttoken import get_verifier
 from core.entities import UserRoleType
 from app.user_team.dependencies.use_cases import get_find_user_teams_use_case
 from app.user_team.use_cases.find_user_teams_use_case import FindUserTeamsUseCase
-from app.user_team.schemas import FindUserTeamsOut, FindTeamOut
+from app.user_team.schemas import FindUserTeamsOut, FindProjectWithTeamsOut
 
 router = APIRouter(
     prefix="/team", tags=["Teams"], dependencies=[get_verifier(UserRoleType.user)]
@@ -21,5 +21,8 @@ async def get_user_teams(
 ) -> FindUserTeamsOut:
     teams = await use_case.execute(session, request.state.user_id)
     return FindUserTeamsOut(
-        teams=[FindTeamOut.model_validate(team, from_attributes=True) for team in teams]
+        projects=[
+            FindProjectWithTeamsOut.model_validate(team, from_attributes=True)
+            for team in teams
+        ]
     )

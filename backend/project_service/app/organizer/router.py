@@ -80,7 +80,7 @@ async def update_project(
     return UpdateUserActionOut()
 
 
-@router.delete(path="/")
+@router.post(path="/cancel")
 async def cancel_project(
     request: Request,
     form: ProjectCancelIn,

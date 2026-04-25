@@ -1,0 +1,13 @@
+Method,Name,Error,Occurrences
+GET,/organizer/teams,RemoteDisconnected('Remote end closed connection without response'),7
+POST,/organizer/ (update),RemoteDisconnected('Remote end closed connection without response'),12
+PUT,/organizer/ (create),HTTPError('500 Server Error: Internal Server Error for url: /organizer/ (create)'),22
+GET,/organizer/teams,HTTPError('500 Server Error: Internal Server Error for url: /organizer/teams'),6
+POST,/organizer/ (cancel),HTTPError('500 Server Error: Internal Server Error for url: /organizer/ (cancel)'),2
+POST,/organizer/match,HTTPError('500 Server Error: Internal Server Error for url: /organizer/match'),1
+GET,/organizer/,RemoteDisconnected('Remote end closed connection without response'),20
+POST,/organizer/ (update),HTTPError('500 Server Error: Internal Server Error for url: /organizer/ (update)'),8
+GET,/organizer/,HTTPError('500 Server Error: Internal Server Error for url: /organizer/'),22
+POST,/organizer/ (cancel),RemoteDisconnected('Remote end closed connection without response'),8
+POST,/organizer/match,RemoteDisconnected('Remote end closed connection without response'),6
+PUT,/organizer/ (create),RemoteDisconnected('Remote end closed connection without response'),22

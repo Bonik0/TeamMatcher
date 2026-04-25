@@ -51,13 +51,13 @@ class SearchServiceUser(HttpUser):
     def role_search(self) -> None:
         q = _random_query_from_name_list(ROLE_NAMES)
         params = {"q": q, "limit": 10, "offset": random.randint(0, 50)}
-        self.client.get("/search/role", params=params, name="/search/role")
+        self.client.get("/role", params=params, name="/search/role")
 
     @task
     def competence_search(self) -> None:
         q = _random_query_from_name_list(COMPETENCE_NAMES)
         params = {"q": q, "limit": 10, "offset": random.randint(0, 50)}
-        self.client.get("/search/competence", params=params, name="/search/competence")
+        self.client.get("/competence", params=params, name="/search/competence")
 
     @task
     def project_search(self) -> None:
@@ -71,9 +71,9 @@ class SearchServiceUser(HttpUser):
             params.append(("role_ids", r))
         for c in comp_choices:
             params.append(("competence_ids", c))
-        self.client.get("/search/project", params=params, name="/search/project")
+        self.client.get("/project", params=params, name="/search/project")
 
     @task
     def project_by_id(self) -> None:
         pid = random.choice(PROJECT_IDS)
-        self.client.get(f"/search/project/{pid}", name="/search/project/{id}")
+        self.client.get(f"/project/{pid}", name="/search/project/{id}")

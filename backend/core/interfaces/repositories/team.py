@@ -1,6 +1,6 @@
 from typing import Protocol, Any
 from sqlalchemy.ext.asyncio import AsyncSession
-from core.entities import TeamWithMembersAndProject, ProjectWithRolesAndTeams
+from core.entities import ProjectWithRolesAndTeams
 
 
 class ITeamRepository(Protocol):
@@ -16,5 +16,5 @@ class ITeamRepository(Protocol):
 
     async def get_by_user_id(
         self, session: AsyncSession, user_id: int
-    ) -> list[TeamWithMembersAndProject]:
+    ) -> list[ProjectWithRolesAndTeams]:
         pass

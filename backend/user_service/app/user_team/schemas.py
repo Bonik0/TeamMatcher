@@ -22,19 +22,20 @@ class FindProjectRoleOut(BaseModel):
 
 class FindTeamMemberOut(BaseModel):
     id: int
-    competence_match: float
-    role_score: float
-
+    project_role_id: int
     user: FindUserOut
-    project_role: FindProjectRoleOut
 
 
 class FindTeamOut(BaseModel):
     id: int
     name: str
-    project: Project
     members: list[FindTeamMemberOut]
 
 
-class FindUserTeamsOut(BaseModel):
+class FindProjectWithTeamsOut(Project):
+    roles: list[FindProjectRoleOut]
     teams: list[FindTeamOut]
+
+
+class FindUserTeamsOut(BaseModel):
+    projects: list[FindProjectWithTeamsOut]
