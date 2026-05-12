@@ -9,7 +9,7 @@ from app.user_team.use_cases.find_user_teams_use_case import FindUserTeamsUseCas
 from app.user_team.schemas import FindUserTeamsOut, FindProjectWithTeamsOut
 
 router = APIRouter(
-    prefix="/team", tags=["Teams"], dependencies=[get_verifier(UserRoleType.user)]
+    prefix="/teams", tags=["Teams"], dependencies=[get_verifier(UserRoleType.user)]
 )
 
 

@@ -36,4 +36,14 @@ def get_match_utils(
     competence_utils: ICompetenceSimilarityUtils,
     role_utils: IUserProjectRoleSimilarityUtils,
 ) -> MatchUtils:
-    return MatchUtils(competence_utils=competence_utils, similarity_utils=role_utils)
+    from app.match.config import match_settings
+
+    return MatchUtils(
+        competence_utils=competence_utils, 
+        similarity_utils=role_utils,
+        initial_temp=match_settings.INITIAL_TEMPERATURE,
+        cooling_rate=match_settings.COOLING_RATE,
+        temp_min=match_settings.MINIMAL_TEMPERATURE,
+        steps_per_temp_factor=match_settings.STEPS_PER_TEMP_FACTOR,
+        random_seed=match_settings.RANDOM_SEED
+    )

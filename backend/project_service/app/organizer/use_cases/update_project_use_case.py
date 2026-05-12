@@ -7,13 +7,17 @@ from fastapi import HTTPException, status
 
 class UpdateProjectUseCase(BaseProjectUseCase):
     async def execute(
-        self, session: AsyncSession, organizer_id: int, form: ProjectUpdateIn
+        self,
+        session: AsyncSession,
+        organizer_id: int,
+        project_id: int,
+        form: ProjectUpdateIn,
     ) -> None:
-        project = await self.project.get_by_id(session, form.project_id)
+        project = await self.project.get_by_id(session, project_id)
         if not project:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Project with id {form.project_id} not found",
+                detail=f"Project with id {project_id} not found",
             )
         if project.status != ProjectStatus.RECRUITING:
             raise HTTPException(
@@ -35,5 +39,5 @@ class UpdateProjectUseCase(BaseProjectUseCase):
             session, project.id, form.name, form.description, form.start_time
         )
         await self._create_or_update_roles(session, project.id, form.roles)
-        await self.utils.update(form.project_id, form.start_time.replace(tzinfo=None))
+        await self.utils.update(project_id, form.start_time.replace(tzinfo=None))
         await session.commit()

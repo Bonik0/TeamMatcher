@@ -1,6 +1,7 @@
 from pydantic import Field, ConfigDict, EmailStr
 from core.schemas import BaseModel, Str, StrXSS
 from uuid import UUID
+from core.entities import UserRoleType
 
 
 class LoginUserIn(BaseModel):
@@ -21,6 +22,7 @@ class UserRegistrationCredentialsIn(UserCredentialsIn, LoginUserIn, UserVerifyAc
     first_name: StrXSS
     patronymic: StrXSS | None
     surname: StrXSS
+    role: UserRoleType
 
 
 class UserLoginCredentialsIn(UserCredentialsIn, LoginUserIn):

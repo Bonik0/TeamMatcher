@@ -27,7 +27,7 @@ export default function ProjectPage() {
 			setError("");
 			try {
 				const response = await fetch(
-					`http://localhost:8000/api/search/project/${id}`,
+					`http://localhost:8000/api/search/projects/${id}`,
 				);
 				if (!response.ok) {
 					setError("Не удалось загрузить проект");
@@ -40,7 +40,7 @@ export default function ProjectPage() {
 				if (user.userRole === "user") {
 					const roleResponse = await fetchWithTokens(
 						"GET",
-						`http://localhost:8000/api/user/role/project/${id}`,
+						`http://localhost:8000/api/user/projects/${id}/roles`,
 					);
 					if (roleResponse && roleResponse.ok) {
 						const rolesData = await roleResponse.json();
@@ -141,7 +141,6 @@ export default function ProjectPage() {
 		try {
 			const normalized = normalizePriorities(selectedRoles.slice());
 			const body = JSON.stringify({
-				project_id: Number(id),
 				roles: normalized.map((r) => ({
 					project_role_id: Number(r.project_role_id),
 					priority: Number(r.priority),
@@ -149,7 +148,7 @@ export default function ProjectPage() {
 			});
 			const response = await fetchWithTokens(
 				"PUT",
-				"http://localhost:8000/api/user/role",
+				`http://localhost:8000/api/user/projects/${id}/roles`,
 				body,
 			);
 			if (!response.ok) {
@@ -165,11 +164,9 @@ export default function ProjectPage() {
 
 	const deleteApplication = async () => {
 		try {
-			const body = JSON.stringify({ project_id: Number(id) });
 			const response = await fetchWithTokens(
 				"DELETE",
-				"http://localhost:8000/api/user/role",
-				body,
+				`http://localhost:8000/api/user/projects/${id}/roles`,
 			);
 			if (!response.ok) {
 				setError("Не удалось удалить заявку");
@@ -184,18 +181,16 @@ export default function ProjectPage() {
 
 	const cancelProjectOrganizer = async () => {
 		try {
-			const body = JSON.stringify({ project_id: Number(id) });
 			const response = await fetchWithTokens(
 				"POST",
-				"http://localhost:8000/api/project/cancel",
-				body,
+				`http://localhost:8000/api/projects/${id}/cancel`,
 			);
 			if (!response.ok) {
 				setError("Не удалось отменить проект");
 				return;
 			}
 			const resp = await fetch(
-				`http://localhost:8000/api/search/project/${id}`,
+				`http://localhost:8000/api/search/projects/${id}`,
 			);
 			if (resp.ok) {
 				const response_dict = await resp.json();
@@ -208,18 +203,16 @@ export default function ProjectPage() {
 
 	const formTeamsOrganizer = async () => {
 		try {
-			const body = JSON.stringify({ project_id: Number(id) });
 			const response = await fetchWithTokens(
 				"POST",
-				"http://localhost:8000/api/project/match",
-				body,
+				`http://localhost:8000/api/projects/${id}/matches`,
 			);
 			if (!response.ok) {
 				setError("Не удалось сформировать команды");
 				return;
 			}
 			const resp = await fetch(
-				`http://localhost:8000/api/search/project/${id}`,
+				`http://localhost:8000/api/search/projects/${id}`,
 			);
 			if (resp.ok) {
 				const response_dict = await resp.json();

@@ -3,7 +3,6 @@ from core.interfaces.repositories.user import IUserRepository
 from core.interfaces.repositories.hashing import IHashingRepository
 from app.auth.schemas import UserRegistrationCredentialsIn
 from fastapi import HTTPException, status
-from core.entities import UserRoleType
 from core.interfaces.repositories.user_verification import IUserVerificationRepository
 from sqlalchemy.ext.asyncio import AsyncSession
 from core.interfaces.use_case import IUseCase
@@ -28,7 +27,6 @@ class RegisterUserUseCase(IUseCase):
         self,
         session: AsyncSession,
         credentials: UserRegistrationCredentialsIn,
-        role: UserRoleType,
     ) -> int:
         hashed = self.hashing.hash_password(credentials.password)
         user = await self.repository.get_by_email(session, credentials.email)
@@ -54,7 +52,7 @@ class RegisterUserUseCase(IUseCase):
             credentials.first_name,
             credentials.patronymic,
             credentials.surname,
-            role,
+            credentials.role,
             hashed,
         )
         await session.commit()

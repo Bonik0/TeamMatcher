@@ -16,7 +16,7 @@ import TeamsPage from "./pages/teams";
 import ProjectPage from "./pages/project";
 import AppliedProjectsPage from "./pages/appliedProjects";
 import OrganizerProjectsPage from "./pages/organizerProjects";
-import ProjectCreatePage from "./pages/project_create";
+import ProjectCreatePage from "./pages/projectCreate";
 
 const LayoutWithMenu = () => {
 	return (

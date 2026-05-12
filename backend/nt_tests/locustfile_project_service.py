@@ -156,7 +156,7 @@ class ProjectServiceUser(HttpUser):
         )
         roles = _random_roles()
         payload = _random_project_payload(roles)
-        response = self.client.put(
+        response = self.client.post(
             "/", json=payload, headers=headers, name="/organizer/ (create)"
         )
         if response.status_code == 201:
@@ -168,7 +168,6 @@ class ProjectServiceUser(HttpUser):
         if not self.project_id:
             return
         payload = {
-            "project_id": int(self.project_id),
             "name": f"updated-{uuid4().hex[:6]}",
             "description": "updated",
             "start_time": (datetime.now() + timedelta(days=10)).strftime(
@@ -183,22 +182,21 @@ class ProjectServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        self.client.post(
-            "/", json=payload, headers=headers, name="/organizer/ (update)"
+        self.client.patch(
+            f"/{int(self.project_id)}", json=payload, headers=headers, name="/organizer/ (update)"
         )
 
     @task(10)
     def cancel_project(self) -> None:
         if not self.project_id:
             return
-        payload = {"project_id": int(self.project_id)}
         headers = (
             {"Authorization": f"Bearer {self.access_token}"}
             if self.access_token
             else {}
         )
         self.client.post(
-            "/cancel", json=payload, headers=headers, name="/organizer/ (cancel)"
+            f"/{int(self.project_id)}/cancel", headers=headers, name="/organizer/ (cancel)"
         )
         self.project_id = None
         self.roles = None
@@ -207,14 +205,13 @@ class ProjectServiceUser(HttpUser):
     def form_teams(self) -> None:
         if not self.project_id:
             return
-        payload = {"project_id": int(self.project_id)}
         headers = (
             {"Authorization": f"Bearer {self.access_token}"}
             if self.access_token
             else {}
         )
         self.client.post(
-            "/match", json=payload, headers=headers, name="/organizer/match"
+            f"/{int(self.project_id)}/matches", headers=headers, name="/organizer/match"
         )
         self.project_id = None
         self.roles = None

@@ -9,12 +9,7 @@ class UserRoleIn(BaseModel):
 
 
 class AddOrUpdateUserRoleIn(BaseModel):
-    project_id: NonNegativeInt
     roles: list[UserRoleIn]
-
-
-class DeleteUserProjectRolesIn(BaseModel):
-    project_id: NonNegativeInt
 
 
 class UserRoleOut(BaseModel):

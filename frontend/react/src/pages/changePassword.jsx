@@ -64,9 +64,9 @@ const ChangePasswordPage = () => {
 			return;
 		}
 		const response = await fetch(
-			`http://localhost:8000/api/auth/change-password`,
+			`http://localhost:8000/api/auth/me/password`,
 			{
-				method: "POST",
+				method: "PATCH",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(
 					{

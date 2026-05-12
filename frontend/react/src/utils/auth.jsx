@@ -29,7 +29,7 @@ export const refreshTokens = async () => {
 
 	localStorage.setItem("is_update", "");
 
-	const response = await fetch(`http://localhost:8000/api/auth/token/update`, {
+	const response = await fetch(`http://localhost:8000/api/auth/tokens/refresh`, {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",

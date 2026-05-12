@@ -18,7 +18,7 @@ export default function UserCompetencesPage() {
 			try {
 				const response = await fetchWithTokens(
 					"GET",
-					"http://localhost:8000/api/user/competence",
+					"http://localhost:8000/api/user/competences",
 				);
 				if (!response.ok) {
 					setError("Не удалось загрузить компетенции");
@@ -54,8 +54,8 @@ export default function UserCompetencesPage() {
 	const addCompetence = async (item, level) => {
 		try {
 			const response = await fetchWithTokens(
-				"POST",
-				"http://localhost:8000/api/user/competence",
+				"PUT",
+				"http://localhost:8000/api/user/competences",
 				JSON.stringify(
 					{
 						competences: [{
@@ -85,8 +85,7 @@ export default function UserCompetencesPage() {
 		try {
 			const response = await fetchWithTokens(
 				"DELETE",
-				"http://localhost:8000/api/user/competence",
-				JSON.stringify({ competence_ids: [Number(id)] }),
+				`http://localhost:8000/api/user/competences/${id}`,
 			);
 			if (!response.ok) {
 				setError("Не удалось удалить компетенцию");
@@ -116,7 +115,7 @@ export default function UserCompetencesPage() {
 							<div style={userCompetenceStyles.searchRow}>
 								<SearchSelect
 									placeholder="Добавить компетенцию"
-									fetchUrl="/api/search/competence"
+									fetchUrl="/api/search/competences"
 									onSelect={(item) => setPending(item)}
 									executedName="competencies"
 									selectedItems={competences.map((comp) => ({

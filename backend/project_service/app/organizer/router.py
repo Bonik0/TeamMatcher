@@ -1,12 +1,10 @@
-from fastapi import APIRouter, Depends, status, Request
+from fastapi import APIRouter, Depends, status, Request, Path
 from app.organizer.schemas import (
     ProjectCreateIn,
     ProjectCreateOut,
     ProjectFindOut,
     ProjectUpdateIn,
-    ProjectCancelIn,
     ProjectOut,
-    ProjectFormatingIn,
     FindProjectWithTeamsOut,
     FindOrganizerTeamsOut,
 )
@@ -37,7 +35,7 @@ router = APIRouter(
 )
 
 
-@router.get(path="/")
+@router.get("/")
 async def find_all_projects(
     request: Request,
     use_case: FindProjectUseCase = Depends(get_find_project_use_case),
@@ -54,7 +52,7 @@ async def find_all_projects(
     )
 
 
-@router.put(path="/", status_code=status.HTTP_201_CREATED)
+@router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_project(
     request: Request,
     form: ProjectCreateIn,
@@ -69,36 +67,37 @@ async def create_project(
     return ProjectCreateOut(project_id=project_id)
 
 
-@router.post(path="/")
+@router.patch("/{project_id}")
 async def update_project(
     request: Request,
     form: ProjectUpdateIn,
+    project_id: int = Path(),
     use_case: UpdateProjectUseCase = Depends(get_update_project_use_case),
     session: AsyncSession = Depends(get_session),
 ) -> UpdateUserActionOut:
-    await use_case.execute(session, request.state.user_id, form)
+    await use_case.execute(session, request.state.user_id, project_id, form)
     return UpdateUserActionOut()
 
 
-@router.post(path="/cancel")
+@router.post("/{project_id}/cancel")
 async def cancel_project(
     request: Request,
-    form: ProjectCancelIn,
+    project_id: int = Path(),
     use_case: CancelProjectUseCase = Depends(get_cancel_project_use_case),
     session: AsyncSession = Depends(get_session),
 ) -> DeleteUserActionOut:
-    await use_case.execute(session, request.state.user_id, form.project_id)
+    await use_case.execute(session, request.state.user_id, project_id)
     return DeleteUserActionOut()
 
 
-@router.post("/match")
+@router.post("/{project_id}/matches")
 async def formating_teams(
     request: Request,
-    form: ProjectFormatingIn,
+    project_id: int = Path(),
     use_case: StartTeamsMatchUseCase = Depends(get_start_teams_match_use_case),
     session: AsyncSession = Depends(get_session),
 ) -> UpdateUserActionOut:
-    await use_case.execute(session, request.state.user_id, form.project_id)
+    await use_case.execute(session, request.state.user_id, project_id)
     return UpdateUserActionOut()
 
 

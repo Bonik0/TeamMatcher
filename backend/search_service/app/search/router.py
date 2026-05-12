@@ -28,7 +28,7 @@ router = APIRouter(
 )
 
 
-@router.get("/role")
+@router.get("/roles")
 async def find_role(
     form: FindRoleIn = Query(),
     use_case: FindRolesUseCase = Depends(get_find_role_use_case),
@@ -38,7 +38,7 @@ async def find_role(
     return FindRoleOut(roles=roles)
 
 
-@router.get("/competence")
+@router.get("/competences")
 async def find_competence(
     form: FindCompetenceIn = Query(),
     use_case: FindCompetenceUseCase = Depends(get_find_competence_use_case),
@@ -48,7 +48,7 @@ async def find_competence(
     return FindCompetenceOut(competencies=competencies)
 
 
-@router.get("/project")
+@router.get("/projects")
 async def find_project(
     form: FindProjectIn = Query(),
     use_case: FindProjectUseCase = Depends(get_find_project_use_case),
@@ -67,7 +67,7 @@ async def find_project(
     )
 
 
-@router.get("/project/{id}")
+@router.get("/projects/{id}")
 async def find_project_by_id(
     id: NonNegativeInt = Path(),
     use_case: FindProjectByIdUseCase = Depends(get_find_project_by_id_use_case),

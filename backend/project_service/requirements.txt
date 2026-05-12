@@ -6,7 +6,8 @@ sqlalchemy-utils
 redis
 faststream
 aio-pika
-celery
+celery[asyncio]
+celery-aio-pool
 asgiref
 networkx
 flower

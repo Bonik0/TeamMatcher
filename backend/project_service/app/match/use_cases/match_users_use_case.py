@@ -54,7 +54,7 @@ class MatchUsersUseCase(IUseCase):
         await session.commit()
 
         teams = self.match_utils.execute(users, project.roles)
-
+        teams_sums = [sum([user.competence_match for user in team]) for team in teams]
         self.logger.info(f"Balanced teams for {project_id=}\n")
         self.logger.info(
             "\n".join(
@@ -63,6 +63,8 @@ class MatchUsersUseCase(IUseCase):
                 for user_index, user in enumerate(team)
             )
         )
+        self.logger.info(f"delta: {max(teams_sums) - min(teams_sums)}")
+        self.logger.info(f"Avarage competence match: {sum(teams_sums) / len(users)}")
 
         await self._change_project_status(session, project_id, ProjectStatus.COMPLETED)
         await self.team_repository.create_bulk(
