@@ -11,10 +11,6 @@ class AddOrUpdateUserCompetenceIn(BaseModel):
     competences: list[UserCompetenceIn]
 
 
-class RemoveUserCompetenceIn(BaseModel):
-    competence_ids: list[NonNegativeInt]
-
-
 class UserCompetenceOut(BaseModel):
     level: UserCompetenceLevelType
     competence: Competence

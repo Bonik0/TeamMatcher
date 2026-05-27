@@ -22,7 +22,7 @@ export default function OrganizerProjectsPage() {
 			setLoading(true);
 			setError("");
 			try {
-				const url = "http://localhost:8000/api/project/";
+				const url = "http://localhost:8000/api/projects/";
 				const response = await fetchWithTokens("GET", url);
 				if (!response.ok) {
 					setError("Не удалось загрузить проекты");

@@ -1,9 +1,8 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Request, Path
 from core.dependencies.postgres import get_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.user_competence.schemas import (
     AddOrUpdateUserCompetenceIn,
-    RemoveUserCompetenceIn,
     UserCompetenceOut,
     UserCompetencesOut,
 )
@@ -27,7 +26,7 @@ from core.entities import UserRoleType
 
 
 router = APIRouter(
-    prefix="/competence",
+    prefix="/competences",
     tags=["Competences"],
     dependencies=[get_verifier(UserRoleType.user)],
 )
@@ -48,7 +47,7 @@ async def find_user_competence(
     )
 
 
-@router.post("")
+@router.put("")
 async def add_or_update_user_competence(
     request: Request,
     form: AddOrUpdateUserCompetenceIn,
@@ -59,12 +58,12 @@ async def add_or_update_user_competence(
     return UpdateUserActionOut()
 
 
-@router.delete("")
+@router.delete("/{competence_id}")
 async def remove_user_competence(
     request: Request,
-    form: RemoveUserCompetenceIn,
+    competence_id: int = Path(),
     use_case: RemoveUserCompetencesUseCase = Depends(get_remove_use_case),
     session: AsyncSession = Depends(get_session),
 ) -> DeleteUserActionOut:
-    await use_case.execute(session, request.state.user_id, form.competence_ids)
+    await use_case.execute(session, request.state.user_id, [competence_id])
     return DeleteUserActionOut()

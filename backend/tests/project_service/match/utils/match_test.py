@@ -189,7 +189,6 @@ class TestGetMaxTeamsNumber:
                 id=1, project_id=1, role_id=10, description="d1", quantity_per_team=2
             )
         ]
-        # sum=2, users_count=1 -> 0.5 -> ceil=1
         utils = MatchUtils(None, None)
         assert utils.get_max_teams_number(roles, 1) == 1
 
@@ -579,7 +578,7 @@ class TestBalanceTeams:
                     project_role_id=1,
                     competence_match=Decimal("9"),
                     role_score=Decimal("0"),
-                ),  #
+                ),  
                 UserProjectScore(
                     user_id=2,
                     project_role_id=1,
@@ -591,7 +590,7 @@ class TestBalanceTeams:
                     project_role_id=2,
                     competence_match=Decimal("9"),
                     role_score=Decimal("0"),
-                ),  #
+                ),  
             ],
             [
                 UserProjectScore(
@@ -599,13 +598,13 @@ class TestBalanceTeams:
                     project_role_id=1,
                     competence_match=Decimal("1"),
                     role_score=Decimal("0"),
-                ),  #
+                ),  
                 UserProjectScore(
                     user_id=5,
                     project_role_id=1,
                     competence_match=Decimal("2"),
                     role_score=Decimal("0"),
-                ),  #
+                ),  
                 UserProjectScore(
                     user_id=6,
                     project_role_id=2,
@@ -619,19 +618,19 @@ class TestBalanceTeams:
                     project_role_id=1,
                     competence_match=Decimal("5"),
                     role_score=Decimal("0"),
-                ),  # 15 8 4 1
+                ), 
                 UserProjectScore(
                     user_id=8,
                     project_role_id=1,
                     competence_match=Decimal("6"),
                     role_score=Decimal("0"),
-                ),  # 16 3 5 7
+                ),  
                 UserProjectScore(
                     user_id=9,
                     project_role_id=2,
                     competence_match=Decimal("5"),
                     role_score=Decimal("0"),
-                ),  # 15 9 5 2
+                ), 
             ],
         ]
         balanced = match_utils.balance_teams(deepcopy(teams), roles)
@@ -644,6 +643,7 @@ class TestBalanceTeams:
         sums_before = [sum([u.competence_match for u in team]) for team in teams]
 
         assert sums_after < sums_before
+        assert max(sums_after) - min(sums_after) == Decimal("1.0")
 
     def test_balance_teams_with_one_team(self, match_utils, sample_roles):
         teams = [
@@ -719,57 +719,11 @@ class TestBalanceTeams:
             ],
         ]
         balanced = match_utils.balance_teams(deepcopy(teams), sample_roles)
-        print(balanced)
         for team in balanced:
             assert all(u.user_id != match_utils.fake_user_id for u in team)
         sums_after = [sum(u.competence_match for u in team) for team in balanced]
         diff_after = max(sums_after) - min(sums_after)
-        assert diff_after == 1
-
-    def test_balance_teams_stops_after_max_iter(self, match_utils, sample_roles):
-        teams = [
-            [
-                UserProjectScore(
-                    user_id=1,
-                    project_role_id=1,
-                    competence_match=Decimal("100"),
-                    role_score=Decimal("0"),
-                ),
-                UserProjectScore(
-                    user_id=2,
-                    project_role_id=1,
-                    competence_match=Decimal("99"),
-                    role_score=Decimal("0"),
-                ),
-                UserProjectScore(
-                    user_id=3,
-                    project_role_id=2,
-                    competence_match=Decimal("100"),
-                    role_score=Decimal("0"),
-                ),
-            ],
-            [
-                UserProjectScore(
-                    user_id=4,
-                    project_role_id=1,
-                    competence_match=Decimal("1"),
-                    role_score=Decimal("0"),
-                ),
-                UserProjectScore(
-                    user_id=5,
-                    project_role_id=1,
-                    competence_match=Decimal("2"),
-                    role_score=Decimal("0"),
-                ),
-                UserProjectScore(
-                    user_id=6,
-                    project_role_id=2,
-                    competence_match=Decimal("1"),
-                    role_score=Decimal("0"),
-                ),
-            ],
-        ]
-        match_utils.balance_teams(deepcopy(teams), sample_roles, max_iter=1000)
+        assert diff_after == Decimal("1.0")
 
     def test_balance_teams_preserves_user_ids(self, match_utils, sample_roles):
         teams = [
@@ -818,3 +772,131 @@ class TestBalanceTeams:
         balanced = match_utils.balance_teams(deepcopy(teams), sample_roles)
         balanced_real_ids = {u.user_id for team in balanced for u in team}
         assert balanced_real_ids == all_real_ids
+        
+    def test_balance_teams_improves_balance(self, match_utils):
+        role_a = ProjectRole(id=1, description=None, project_id=1, role_id=1, quantity_per_team=2)
+        role_b = ProjectRole(id=2, description=None, project_id=1, role_id=2, quantity_per_team=2)
+        project_roles = [role_a, role_b]
+        
+        users = []
+        
+        strong_competence = Decimal("100.0")
+        weak_competence = Decimal("10.0")
+        for i in range(4):
+            users.append(
+                UserProjectScore(
+                    user_id=i*2, 
+                    project_role_id=1, 
+                    competence_match=strong_competence,
+                    role_score=Decimal("0.0")
+                )
+            )
+            users.append(
+                UserProjectScore(
+                    user_id=i*2+1, 
+                    project_role_id=1, 
+                    competence_match=weak_competence,
+                    role_score=Decimal("0.0")
+                )
+            )
+        for i in range(4):
+            users.append(
+                UserProjectScore(
+                    user_id=100 + i*2, 
+                    project_role_id=2, 
+                    competence_match=strong_competence,
+                    role_score=Decimal("0.0")
+                )
+            )
+            users.append(
+                UserProjectScore(
+                    user_id=100 + i*2+1, 
+                    project_role_id=2, 
+                    competence_match=weak_competence,
+                    role_score=Decimal("0.0")
+                )
+            )
+        
+        unbalanced_teams = match_utils.assign_unbalanced_teams(users, project_roles, num_teams=2)
+        
+        initial_sums = [sum(float(u.competence_match) for u in team) for team in unbalanced_teams]
+        initial_diff = max(initial_sums) - min(initial_sums)
+                
+        balanced_teams = match_utils.balance_teams(unbalanced_teams, project_roles)
+        final_sums = [sum(float(u.competence_match) for u in team) for team in balanced_teams]
+        final_diff = max(final_sums) - min(final_sums)
+        
+        assert final_diff <= initial_diff
+        
+        
+
+    def test_balance_teams_escapes_local_minimum(self, match_utils):
+
+        role_a = ProjectRole(id=1, description=None, project_id=1, role_id=1, quantity_per_team=1)
+        role_b = ProjectRole(id=2, description=None, project_id=1, role_id=2, quantity_per_team=1)
+        project_roles = [role_a, role_b]
+        
+        teams = [
+            [
+                UserProjectScore(
+                    user_id=1,  
+                    project_role_id=1, 
+                    competence_match=Decimal("100.0"), 
+                    role_score=Decimal("0.0")
+                ),
+                UserProjectScore(
+                    user_id=2,
+                    project_role_id=2, 
+                    competence_match=Decimal("1.0"),   
+                    role_score=Decimal("0.0")
+                )
+            ],
+            [
+                UserProjectScore(
+                    user_id=3, 
+                    project_role_id=1,
+                    competence_match=Decimal("80.0"), 
+                    role_score=Decimal("0.0")
+                ),
+                UserProjectScore(
+                    user_id=4,  
+                    project_role_id=2,
+                    competence_match=Decimal("10.0"),
+                    role_score=Decimal("0.0")
+                )
+            ],
+            [
+                UserProjectScore(
+                    user_id=5,
+                    project_role_id=1,
+                    competence_match=Decimal("60.0"),
+                    role_score=Decimal("0.0")
+                ),
+
+                UserProjectScore(
+                    user_id=6,
+                    project_role_id=2,
+                    competence_match=Decimal("90.0"),
+                    role_score=Decimal("0.0")
+                )
+            ],
+            [
+                UserProjectScore(
+                    user_id=7,
+                    project_role_id=1,
+                    competence_match=Decimal("30.0"),
+                    role_score=Decimal("0.0")
+                ),
+                UserProjectScore(
+                    user_id=8,
+                    project_role_id=2,
+                    competence_match=Decimal("20.0"),
+                    role_score=Decimal("0.0")
+                )
+            ]
+        ]
+                                
+        balanced_teams = match_utils.balance_teams(teams, project_roles)
+        final_sums = [sum(float(u.competence_match) for u in team) for team in balanced_teams]
+        final_diff = max(final_sums) - min(final_sums)
+        assert final_diff == Decimal("40")

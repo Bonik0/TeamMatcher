@@ -81,11 +81,7 @@ const RegisterPage = () => {
 			handleErrorsChange("Пароли не совпадают", "confirmPassword");
 			return;
 		}
-		const url = formData.role === "organizer"
-			? "http://localhost:8000/api/auth/organizer-registration"
-			: "http://localhost:8000/api/auth/registration";
-
-		const response = await fetch(url, {
+		const response = await fetch("http://localhost:8000/api/auth/register", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({
@@ -95,6 +91,7 @@ const RegisterPage = () => {
 				surname: formData.surname,
 				patronymic: formData.patronymic,
 				password: formData.password,
+				role: formData.role
 			}),
 		});
 

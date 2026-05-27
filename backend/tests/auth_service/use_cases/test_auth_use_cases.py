@@ -59,24 +59,25 @@ async def test_register_user_branches_and_success():
         patronymic=None,
         surname="S",
         operation_id=uuid4(),
+        role=UserRoleType.user,
     )
 
     repo.get_by_email = AsyncMock(return_value=SimpleNamespace(id=1))
     use_case = RegisterUserUseCase(repo, hashing, verification, True, logger)
     session = AsyncMock()
     with pytest.raises(HTTPException):
-        await use_case.execute(session, cred, UserRoleType.user)
+        await use_case.execute(session, cred)
 
     repo.get_by_email = AsyncMock(return_value=None)
     verification.exist = AsyncMock(return_value=False)
     with pytest.raises(HTTPException):
-        await use_case.execute(session, cred, UserRoleType.user)
+        await use_case.execute(session, cred)
 
     verification.exist = AsyncMock(return_value=True)
     repo.create = AsyncMock(return_value=42)
     session.commit = AsyncMock()
     verification.delete = AsyncMock()
-    user_id = await use_case.execute(session, cred, UserRoleType.user)
+    user_id = await use_case.execute(session, cred)
     assert user_id == 42
     session.commit.assert_awaited_once()
     verification.delete.assert_awaited_once_with(cred.email, cred.operation_id)

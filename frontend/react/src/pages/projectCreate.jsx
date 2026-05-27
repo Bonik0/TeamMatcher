@@ -91,8 +91,8 @@ export default function ProjectCreatePage() {
 					})),
 				};
 				const body = JSON.stringify(bodyObj);
-				const url = "http://localhost:8000/api/project/";
-				const response = await fetchWithTokens("PUT", url, body);
+				const url = "http://localhost:8000/api/projects/";
+				const response = await fetchWithTokens("POST", url, body);
 				if (!response) {
 					setErrors({ ...noErrorsState, message: "Неавторизован" });
 					return;
@@ -392,7 +392,7 @@ export default function ProjectCreatePage() {
 								<div style={{ marginBottom: "1rem" }}>
 									<SearchSelect
 										placeholder="Название роли"
-										fetchUrl="/api/search/role"
+										fetchUrl="/api/search/roles"
 										onSelect={(item) =>
 											setRoleDraft((prev) => ({
 												...prev,
@@ -454,7 +454,7 @@ export default function ProjectCreatePage() {
 									>
 										<SearchSelect
 											placeholder="Поиск компетенции"
-											fetchUrl="/api/search/competence"
+											fetchUrl="/api/search/competences"
 											onSelect={(item) =>
 												setRoleDraft((prev) => ({
 													...prev,

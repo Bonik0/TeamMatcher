@@ -13,7 +13,6 @@ from app.auth.dependencies.use_cases import (
     get_login_user_case,
     get_register_use_case,
 )
-from core.entities import UserRoleType
 from app.jwttoken.dependencies.user_cases import get_generate_tokens_use_case
 from app.jwttoken.user_cases.generate_token_case import GenerateTokensUseCase
 from app.jwttoken.utils import JWTGenerator
@@ -29,10 +28,10 @@ router = APIRouter(
 
 
 @router.post(
-    path="/registration",
-    summary="User registration",
+    path="/register",
+    summary="Registration",
 )
-async def user_registrate(
+async def registrate(
     user_credentials: UserRegistrationCredentialsIn,
     register_use_case: RegisterUserUseCase = Depends(get_register_use_case),
     generate_tokens_use_case: GenerateTokensUseCase = Depends(
@@ -41,40 +40,13 @@ async def user_registrate(
     jwt_token_generator: JWTGenerator = Depends(get_jwt_token_generator),
     session: AsyncSession = Depends(get_session),
 ) -> IssuedJWTTokensOut:
-    user_id = await register_use_case.execute(
-        session, user_credentials, UserRoleType.user
-    )
+
+    user_id = await register_use_case.execute(session, user_credentials)
     device_id = jwt_token_generator.get_device_id()
     access, refresh = await generate_tokens_use_case.execute(
-        user_id, UserRoleType.user, device_id
-    )
-    return IssuedJWTTokensOut(
-        access_token=access,
-        refresh_token=refresh,
-        exp=generate_tokens_use_case.jwt_service.access_ttl_sec,
+        user_id, user_credentials.role, device_id
     )
 
-
-@router.post(
-    path="/organizer-registration",
-    summary="Organizer registration",
-)
-async def organizer_registrate(
-    organizer_credentials: UserRegistrationCredentialsIn,
-    register_use_case: RegisterUserUseCase = Depends(get_register_use_case),
-    generate_tokens_use_case: GenerateTokensUseCase = Depends(
-        get_generate_tokens_use_case
-    ),
-    jwt_token_generator: JWTGenerator = Depends(get_jwt_token_generator),
-    session: AsyncSession = Depends(get_session),
-) -> IssuedJWTTokensOut:
-    user_id = await register_use_case.execute(
-        session, organizer_credentials, UserRoleType.organizer
-    )
-    device_id = jwt_token_generator.get_device_id()
-    access, refresh = await generate_tokens_use_case.execute(
-        user_id, UserRoleType.organizer, device_id
-    )
     return IssuedJWTTokensOut(
         access_token=access,
         refresh_token=refresh,
@@ -107,8 +79,8 @@ async def login(
     )
 
 
-@router.post(
-    path="/change-password",
+@router.patch(
+    path="/me/password",
     summary="Change password",
 )
 async def change_password(

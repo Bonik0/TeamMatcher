@@ -26,7 +26,7 @@ const SideMenu = () => {
 	const logout = async () => {
 		await fetchWithTokens(
 			"GET",
-			"http://localhost:8000/api/auth/token/logout",
+			"http://localhost:8000/api/auth/tokens/revoke",
 		);
 		deleteTokens();
 		goToLoginPage();
@@ -35,7 +35,7 @@ const SideMenu = () => {
 	const fullLogout = async () => {
 		await fetchWithTokens(
 			"GET",
-			"http://localhost:8000/api/auth/token/full-logout",
+			"http://localhost:8000/api/auth/tokens/revoke-all",
 		);
 		deleteTokens();
 		goToLoginPage();

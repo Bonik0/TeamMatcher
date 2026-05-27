@@ -17,7 +17,7 @@ export default function AppliedProjectsPage() {
 			setLoading(true);
 			setError("");
 			try {
-				const url = "http://localhost:8000/api/user/role";
+				const url = "http://localhost:8000/api/user/projects";
 				const response = await fetchWithTokens("GET", url);
 				if (!response.ok) {
 					setError("Не удалось загрузить проекты");

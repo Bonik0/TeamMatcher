@@ -13,6 +13,9 @@ from app.match.utils.interfaces import (
 import math
 from collections import defaultdict
 from decimal import Decimal
+from copy import deepcopy
+import random
+import logging
 
 
 class MatchUtils(IMatchUtils):
@@ -21,10 +24,20 @@ class MatchUtils(IMatchUtils):
         competence_utils: ICompetenceSimilarityUtils,
         similarity_utils: IUserProjectRoleSimilarityUtils,
         fake_user_id: int = -1,
+        initial_temp: float = 5000.0,
+        cooling_rate: float = 0.998,
+        temp_min: float = 0.01,
+        steps_per_temp_factor: int = 5,
+        random_seed: int | None = None,
     ) -> None:
         self.competence_utils = competence_utils
         self.similarity_utils = similarity_utils
         self.fake_user_id = fake_user_id
+        self.initial_temp = initial_temp
+        self.cooling_rate = cooling_rate
+        self.temp_min = temp_min
+        self.steps_per_temp_factor = steps_per_temp_factor
+        random.seed(random_seed)
 
     def get_max_teams_number(
         self, project_roles: list[ProjectRole], users_count: int
@@ -163,179 +176,82 @@ class MatchUtils(IMatchUtils):
         self,
         teams: list[list[UserProjectScore]],
         project_roles: list[ProjectRole],
-        max_iter: int = 1000,
     ) -> list[list[UserProjectScore]]:
+        objective = lambda team_sums: max(team_sums) - min(team_sums)
 
         num_teams = len(teams)
-        team_sums = [sum(user.competence_match for user in team) for team in teams]
+        steps_per_temp = max(10, self.steps_per_temp_factor * num_teams)
+        T = self.initial_temp
 
-        improved = True
-        iter_count = 0
+        if num_teams < 2:
+            return teams
 
-        while improved and iter_count < max_iter:
-            improved = False
-            iter_count += 1
+        role_ids = [project_role.id for project_role in project_roles]
+        team_sums = [
+            float(sum(user.competence_match for user in team)) for team in teams
+        ]
 
-            max_index = max(range(num_teams), key=lambda i: team_sums[i])
-            min_index = min(range(num_teams), key=lambda i: team_sums[i])
+        current_score = objective(team_sums)
 
-            if team_sums[max_index] == team_sums[min_index]:
-                break
+        best_score = current_score
+        best_teams = deepcopy(teams)
 
-            current_diff = team_sums[max_index] - team_sums[min_index]
+        while T > self.temp_min:
+            for _ in range(steps_per_temp):
+                team_i, team_j = random.sample(range(num_teams), 2)
+                role_id = random.choice(role_ids)
 
-            for k in range(num_teams):
-                if k == max_index or k == min_index:
-                    continue
+                members_index_i = [
+                    index
+                    for index, user in enumerate(teams[team_i])
+                    if user.project_role_id == role_id
+                ]
+                members_index_j = [
+                    index
+                    for index, user in enumerate(teams[team_j])
+                    if user.project_role_id == role_id
+                ]
 
-                for role in project_roles:
-                    user_k = next(
-                        (user for user in teams[k] if user.project_role_id == role.id),
-                        None,
+                member_i = random.choice(members_index_i)
+                member_j = random.choice(members_index_j)
+                member_competence_i = float(teams[team_i][member_i].competence_match)
+                member_competence_j = float(teams[team_j][member_j].competence_match)
+
+                new_sum_i = (
+                    team_sums[team_i] - member_competence_i + member_competence_j
+                )
+                new_sum_j = (
+                    team_sums[team_j] - member_competence_j + member_competence_i
+                )
+
+                temp_sums = team_sums.copy()
+                temp_sums[team_i] = new_sum_i
+                temp_sums[team_j] = new_sum_j
+                new_score = objective(temp_sums)
+
+                delta = new_score - current_score
+
+                if delta < 0 or random.random() < math.exp(-delta / T):
+                    teams[team_i][member_i], teams[team_j][member_j] = (
+                        teams[team_j][member_j],
+                        teams[team_i][member_i],
                     )
-                    user_max = next(
-                        (
-                            user
-                            for user in teams[max_index]
-                            if user.project_role_id == role.id
-                        ),
-                        None,
-                    )
-                    if (
-                        user_k
-                        and user_max
-                        and user_k.competence_match < user_max.competence_match
-                    ):
-                        new_sum_max = (
-                            team_sums[max_index]
-                            - user_max.competence_match
-                            + user_k.competence_match
-                        )
-                        new_sum_k = (
-                            team_sums[k]
-                            - user_k.competence_match
-                            + user_max.competence_match
-                        )
+                    team_sums[team_i] = new_sum_i
+                    team_sums[team_j] = new_sum_j
+                    current_score = new_score
 
-                        new_sums = team_sums.copy()
-                        new_sums[max_index] = new_sum_max
-                        new_sums[k] = new_sum_k
+                    if current_score < best_score:
+                        best_teams = deepcopy(teams)
+                        best_score = current_score
+                        logging.info(f"{best_score=}")
 
-                        new_diff = max(new_sums) - min(new_sums)
-                        if abs(new_diff) < current_diff:
-                            index_max = teams[max_index].index(user_max)
-                            index_k = teams[k].index(user_k)
 
-                            teams[max_index][index_max], teams[k][index_k] = (
-                                teams[k][index_k],
-                                teams[max_index][index_max],
-                            )
-                            team_sums[max_index] = new_sum_max
-                            team_sums[k] = new_sum_k
+            T *= self.cooling_rate
 
-                            improved = True
-                            current_diff = new_diff
-                if improved:
-                    break
-
-                for role in project_roles:
-                    user_k = next(
-                        (user for user in teams[k] if user.project_role_id == role.id),
-                        None,
-                    )
-                    user_min = next(
-                        (
-                            user
-                            for user in teams[min_index]
-                            if user.project_role_id == role.id
-                        ),
-                        None,
-                    )
-                    if (
-                        user_k
-                        and user_min
-                        and user_k.competence_match > user_min.competence_match
-                    ):
-                        new_sum_min = (
-                            team_sums[min_index]
-                            - user_min.competence_match
-                            + user_k.competence_match
-                        )
-                        new_sum_k = (
-                            team_sums[k]
-                            - user_k.competence_match
-                            + user_min.competence_match
-                        )
-
-                        new_sums = team_sums.copy()
-                        new_sums[min_index] = new_sum_min
-                        new_sums[k] = new_sum_k
-
-                        new_diff = max(new_sums) - min(new_sums)
-                        if abs(new_diff) < current_diff:
-                            index_min = teams[min_index].index(user_min)
-                            index_k = teams[k].index(user_k)
-                            teams[min_index][index_min], teams[k][index_k] = (
-                                teams[k][index_k],
-                                teams[min_index][index_min],
-                            )
-                            team_sums[min_index] = new_sum_min
-                            team_sums[k] = new_sum_k
-                            improved = True
-                            current_diff = new_diff
-                            break
-                if improved:
-                    break
-
-            if not improved:
-                for role in project_roles:
-                    users_max = [
-                        user
-                        for user in teams[max_index]
-                        if user.project_role_id == role.id
-                    ]
-                    users_min = [
-                        user
-                        for user in teams[min_index]
-                        if user.project_role_id == role.id
-                    ]
-                    for user_max in users_max:
-                        for user_min in users_min:
-                            if user_max.competence_match > user_min.competence_match:
-                                new_sum_max = (
-                                    team_sums[max_index]
-                                    - user_max.competence_match
-                                    + user_min.competence_match
-                                )
-                                new_sum_min = (
-                                    team_sums[min_index]
-                                    - user_min.competence_match
-                                    + user_max.competence_match
-                                )
-                                new_diff = new_sum_max - new_sum_min
-                                if abs(new_diff) < current_diff:
-                                    idx_max = teams[max_index].index(user_max)
-                                    idx_min = teams[min_index].index(user_min)
-                                    (
-                                        teams[max_index][idx_max],
-                                        teams[min_index][idx_min],
-                                    ) = (
-                                        teams[min_index][idx_min],
-                                        teams[max_index][idx_max],
-                                    )
-                                    team_sums[max_index] = new_sum_max
-                                    team_sums[min_index] = new_sum_min
-                                    improved = True
-                                    break
-                        if improved:
-                            break
-                    if improved:
-                        break
-
-        for team in teams:
+        for team in best_teams:
             team[:] = [user for user in team if user.user_id != self.fake_user_id]
 
-        return teams
+        return best_teams
 
     def execute(
         self,

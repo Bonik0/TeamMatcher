@@ -52,7 +52,7 @@ const EmailVerificationPage = () => {
 			return;
 		}
 
-		const response = await fetch(`http://localhost:8000/api/email/code/send`, {
+		const response = await fetch(`http://localhost:8000/api/email/verification/send`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -110,7 +110,7 @@ const EmailVerificationPage = () => {
 	};
 
 	const handleResendCode = async () => {
-		const response = await fetch(`http://localhost:8000/api/email/code/send`, {
+		const response = await fetch(`http://localhost:8000/api/email/verification/send`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify({ email: email }),
@@ -138,7 +138,7 @@ const EmailVerificationPage = () => {
 			return;
 		}
 		const response = await fetch(
-			`http://localhost:8000/api/email/code/verify`,
+			`http://localhost:8000/api/email/verification/verify`,
 			{
 				method: "POST",
 				headers: { "Content-Type": "application/json" },

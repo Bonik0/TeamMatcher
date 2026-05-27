@@ -51,15 +51,7 @@ class ProjectCreateIn(BaseModel):
 
 
 class ProjectUpdateIn(ProjectCreateIn):
-    project_id: NonNegativeInt
-
-
-class ProjectCancelIn(BaseModel):
-    project_id: NonNegativeInt
-
-
-class ProjectFormatingIn(BaseModel):
-    project_id: NonNegativeInt
+    pass
 
 
 class ProjectCreateOut(BaseModel):

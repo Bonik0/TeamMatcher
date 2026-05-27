@@ -43,7 +43,7 @@ class AuthServiceUser(HttpUser):
         if not self.access_token:
             return
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        self.client.get("/token", headers=headers, name="/token (verify)")
+        self.client.get("/tokens/verify", headers=headers, name="/token/verify")
 
     @task(10)
     def update_tokens(self) -> None:
@@ -51,9 +51,9 @@ class AuthServiceUser(HttpUser):
             return
 
         response = self.client.post(
-            "/token/update",
+            "/tokens/refresh",
             json={"refresh_token": self.refresh_token},
-            name="/token/update",
+            name="/tokens/refresh",
         )
         if response.status_code == 200:
             js = response.json()
@@ -84,8 +84,9 @@ class AuthServiceUser(HttpUser):
             "patronymic": None,
             "surname": "Test",
             "operation_id": str(uuid4()),
+            "role": "user"
         }
-        response = self.client.post("/registration", json=payload, name="/registration")
+        response = self.client.post("/register", json=payload, name="/register (user)")
         if response.status_code == 200:
             js = response.json()
             self.access_token = js.get("access_token")
@@ -102,9 +103,10 @@ class AuthServiceUser(HttpUser):
             "patronymic": None,
             "surname": "Test",
             "operation_id": str(uuid4()),
+            "role": "organizer"
         }
         response = self.client.post(
-            "/organizer-registration", json=payload, name="/organizer-registration"
+            "/register", json=payload, name="/register (organizer)"
         )
         if response.status_code == 200:
             js = response.json()
@@ -121,14 +123,14 @@ class AuthServiceUser(HttpUser):
             "operation_id": str(uuid4()),
             "password": DEFAULT_PASSWORD,
         }
-        self.client.post("/change-password", json=payload, name="/change-password")
+        self.client.patch("/me/password", json=payload, name="/me/password")
 
     @task(3)
     def logout(self) -> None:
         if not self.access_token:
             return
         headers = {"Authorization": f"Bearer {self.access_token}"}
-        self.client.get("/token/logout", headers=headers, name="/token/logout")
+        self.client.get("/tokens/revoke", headers=headers, name="/token/revoke")
         self.access_token = None
         self.refresh_token = None
         self.email = None
@@ -139,7 +141,7 @@ class AuthServiceUser(HttpUser):
             return
         headers = {"Authorization": f"Bearer {self.access_token}"}
         self.client.get(
-            "/token/full-logout", headers=headers, name="/token/full-logout"
+            "/tokens/revoke-all", headers=headers, name="/token/revoke-all"
         )
         self.access_token = None
         self.refresh_token = None

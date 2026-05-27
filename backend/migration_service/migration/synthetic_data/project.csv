@@ -1,31 +1,51 @@
 id,name,organizer_id,description,status,start_time
-1,AI Hackathon Platform,90,Платформа для проведения AI-хакатонов,recruiting,2026-06-01 10:00:00
-2,FinTech Challenge,91,Разработка финтех решений на основе API банков,recruiting,2026-06-05 12:00:00
-3,HealthTech Sprint,92,Цифровые решения для здравоохранения,recruiting,2026-06-10 09:00:00
-4,Smart City Hack,93,Разработка сервисов умного города,recruiting,2026-06-12 10:00:00
-5,EdTech Hackathon,94,Образовательные платформы нового поколения,recruiting,2026-06-15 11:00:00
-6,CyberSecurity Battle,95,Поиск уязвимостей и защита систем,recruiting,2026-06-18 10:00:00
-7,Blockchain Hack,96,Решения на базе блокчейн технологий,recruiting,2026-06-20 13:00:00
-8,AI Vision Contest,97,Компьютерное зрение и нейросети,recruiting,2026-06-22 10:00:00
-9,Cloud Native Hack,98,Облачные и микросервисные решения,recruiting,2026-06-25 11:00:00
-10,GameDev Jam,99,Разработка игр за 48 часов,recruiting,2026-06-28 14:00:00
-11,Mobile App Sprint,100,Создание мобильных приложений,recruiting,2026-07-01 10:00:00
-12,Data Science Bootcamp,90,Анализ данных и ML модели,recruiting,2026-07-03 09:00:00
-13,DevOps Challenge,91,Автоматизация инфраструктуры,recruiting,2026-07-05 10:00:00
-14,AR VR Hackathon,92,Дополненная и виртуальная реальность,recruiting,2026-07-07 12:00:00
-15,GreenTech Hack,93,Экологические IT решения,recruiting,2026-07-10 09:00:00
-16,IoT Hackathon,94,Интернет вещей и сенсоры,recruiting,2026-07-12 11:00:00
-17,Startup Weekend IT,95,Прототипирование стартапов,recruiting,2026-07-15 10:00:00
-18,AI Chatbot Hack,96,Разработка чат-ботов,recruiting,2026-07-18 10:00:00
-19,Open Source Sprint,97,Контрибьюция в open source,recruiting,2026-07-20 09:00:00
-20,Big Data Hack,98,Обработка больших данных,recruiting,2026-07-22 10:00:00
-21,Legacy System Refactor,99,Модернизация старых систем,recruiting,2026-07-25 10:00:00
-22,AI Healthcare MVP,100,Прототип AI для медицины,recruiting,2026-07-27 11:00:00
-23,Fintech Analytics Tool,90,Аналитика финансовых данных,recruiting,2026-07-29 12:00:00
-24,Smart Parking System,91,Умные парковки,recruiting,2026-08-01 10:00:00
-25,E-learning Platform,92,Онлайн обучение,recruiting,2026-08-03 09:00:00
-26,Cyber Defense Tool,93,Инструменты защиты,recruiting,2026-08-05 11:00:00
-27,Blockchain Wallet,94,Крипто кошелёк,recruiting,2026-08-07 10:00:00
-28,Cloud Monitoring System,95,Мониторинг облаков,recruiting,2026-08-10 12:00:00
-29,Game AI Engine,96,ИИ для игр,recruiting,2026-08-12 10:00:00
-30,Mobile Banking App,97,Мобильный банк,recruiting,2026-08-15 11:00:00
+1,AI Hackathon Platform,1090,Платформа для проведения AI-хакатонов,recruiting,2026-06-01 10:00:00
+2,FinTech Challenge,1091,Разработка финтех решений на основе API банков,recruiting,2026-06-05 12:00:00
+3,HealthTech Sprint,1092,Цифровые решения для здравоохранения,recruiting,2026-06-10 09:00:00
+4,Smart City Hack,1093,Разработка сервисов умного города,recruiting,2026-06-12 10:00:00
+5,EdTech Hackathon,1094,Образовательные платформы нового поколения,recruiting,2026-06-15 11:00:00
+6,CyberSecurity Battle,1095,Поиск уязвимостей и защита систем,recruiting,2026-06-18 10:00:00
+7,Blockchain Hack,1096,Решения на базе блокчейн технологий,recruiting,2026-06-20 13:00:00
+8,AI Vision Contest,1097,Компьютерное зрение и нейросети,recruiting,2026-06-22 10:00:00
+9,Cloud Native Hack,1098,Облачные и микросервисные решения,recruiting,2026-06-25 11:00:00
+10,GameDev Jam,1099,Разработка игр за 48 часов,recruiting,2026-06-28 14:00:00
+11,Mobile App Sprint,1100,Создание мобильных приложений,recruiting,2026-07-01 10:00:00
+12,Data Science Bootcamp,1090,Анализ данных и ML модели,recruiting,2026-07-03 09:00:00
+13,DevOps Challenge,1091,Автоматизация инфраструктуры,recruiting,2026-07-05 10:00:00
+14,AR VR Hackathon,1092,Дополненная и виртуальная реальность,recruiting,2026-07-07 12:00:00
+15,GreenTech Hack,1093,Экологические IT решения,recruiting,2026-07-10 09:00:00
+16,IoT Hackathon,1094,Интернет вещей и сенсоры,recruiting,2026-07-12 11:00:00
+17,Startup Weekend IT,1095,Прототипирование стартапов,recruiting,2026-07-15 10:00:00
+18,AI Chatbot Hack,1096,Разработка чат-ботов,recruiting,2026-07-18 10:00:00
+19,Open Source Sprint,1097,Контрибьюция в open source,recruiting,2026-07-20 09:00:00
+20,Big Data Hack,1098,Обработка больших данных,recruiting,2026-07-22 10:00:00
+21,Legacy System Refactor,1099,Модернизация старых систем,recruiting,2026-07-25 10:00:00
+22,AI Healthcare MVP,1100,Прототип AI для медицины,recruiting,2026-07-27 11:00:00
+23,Fintech Analytics Tool,1090,Аналитика финансовых данных,recruiting,2026-07-29 12:00:00
+24,Smart Parking System,1091,Умные парковки,recruiting,2026-08-01 10:00:00
+25,E-learning Platform,1092,Онлайн обучение,recruiting,2026-08-03 09:00:00
+26,Cyber Defense Tool,1093,Инструменты защиты,recruiting,2026-08-05 11:00:00
+27,Blockchain Wallet,1094,Крипто кошелёк,recruiting,2026-08-07 10:00:00
+28,Cloud Monitoring System,1095,Мониторинг облаков,recruiting,2026-08-10 12:00:00
+29,Game AI Engine,1096,ИИ для игр,recruiting,2026-08-12 10:00:00
+30,Mobile Banking App,1097,Мобильный банк,recruiting,2026-08-15 11:00:00
+31,Technical Docs Hub,1098,Создание единой платформы для технической документации с автоматической валидацией примеров кода,recruiting,2026-08-18 10:00:00
+32,Agile Transformation Lab,1099,Внедрение Scrum и Kanban в команду из 50+ человек с нуля,recruiting,2026-08-20 09:00:00
+33,Database Performance Challenge,1090,Оптимизация запросов и шардинг для базы данных на 10 млн записей,recruiting,2026-08-22 11:00:00
+34,IoT Edge Gateway,1091,Разработка прошивки для шлюза умного дома на Cortex-M,recruiting,2026-08-25 10:00:00
+35,ERP Customization Sprint,1092,Доработка модуля закупок в Open Source ERP (Odoo/ERPNext),recruiting,2026-08-27 12:00:00
+36,Test Automation Framework,1093,Построение универсального фреймворка для UI + API автотестов,recruiting,2026-08-30 09:00:00
+37,Load Testing Battle,1094,Имитация нагрузки на highload проект и поиск узких мест,recruiting,2026-09-01 10:00:00
+38,SRE Reliability Boost,1095,Создание SLO/SLA дашбордов и автоматическое восстановление сервисов,recruiting,2026-09-03 11:00:00
+39,Sales Analytics Dashboard,1096,Разработка интерактивных дашбордов в Tableau/Power BI,recruiting,2026-09-05 10:00:00
+40,BI Reporting Pipeline,1097,Построение ETL для витрин данных корпоративной отчетности,recruiting,2026-09-07 12:00:00
+41,Embedded RTOS Migration,1098,Перенос прошивки с FreeRTOS на Zephyr для контроллера,recruiting,2026-09-10 09:00:00
+42,System Integration Marathon,1099,Сборка интеграционного слоя между CRM ERP и SCADA,recruiting,2026-09-12 10:00:00
+43,Cloud Cost Optimizer,1090,Разработка инструмента для анализа и сокращения расходов AWS/GCP,recruiting,2026-09-15 11:00:00
+44,Conversational AI Bot,1091,Создание корпоративного чат-бота с RAG на основе документов,recruiting,2026-09-18 10:00:00
+45,VR Meeting Room,1092,Прототип виртуальной комнаты для совещаний в Unity + WebXR,recruiting,2026-09-20 12:00:00
+46,Smart Contract Audit,1093,Аудит безопасности DeFi контракта и написание отчетов,recruiting,2026-09-22 10:00:00
+47,Data Quality Monitor,1094,Сервис мониторинга качества данных в Kafka/MongoDB,recruiting,2026-09-25 09:00:00
+48,Release Coordinator Pro,1095,Автоматизация чеканса релизов с генерацией changelog и rollback планов,recruiting,2026-09-27 11:00:00
+49,Technical Support Portal,1096,Платформа для L1/L2 поддержки с интеграцией базы знаний и чата,recruiting,2026-09-30 10:00:00
+50,AI Research Lab,1097,Эксперименты с новыми архитектурами LLM и публикация результатов,recruiting,2026-10-02 12:00:00

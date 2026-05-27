@@ -1,10 +1,13 @@
-from hashlib import sha256
+import bcrypt
 from core.interfaces.repositories.hashing import IHashingRepository
 
 
-class ShaHashing(IHashingRepository):
+class BcryptHashing(IHashingRepository):
+    def __init__(self, salt: bytes | None = None) -> None:
+        self.salt = salt
+
     def hash_password(self, password: str) -> str:
-        return sha256(password.encode("utf-8")).hexdigest()
+        return bcrypt.hashpw(password.encode(), self.salt or bcrypt.gensalt()).decode()
 
     def verify_password(self, plain_password: str, hashed_password: str) -> bool:
-        return self.hash_password(plain_password) == hashed_password
+        return bcrypt.checkpw(plain_password.encode(), hashed_password.encode())

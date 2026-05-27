@@ -23,11 +23,11 @@ from app.jwttoken.user_cases.full_logout_use_case import FullLogoutUseCase
 from app.jwttoken.utils import JWTService, AuthHeaderVerifyUtils
 
 
-router = APIRouter(prefix="/token", tags=["Work with tokens"])
+router = APIRouter(prefix="/tokens", tags=["Work with tokens"])
 
 
 @router.get(
-    path="",
+    path="/verify",
     summary="Verify token",
 )
 async def verify_access_token(
@@ -40,7 +40,7 @@ async def verify_access_token(
 
 
 @router.post(
-    path="/update",
+    path="/refresh",
     summary="Token update",
 )
 async def update_tokens(
@@ -59,7 +59,7 @@ async def update_tokens(
 
 
 @router.get(
-    path="/logout",
+    path="/revoke",
     summary="Revoke token",
 )
 async def revorke_token(
@@ -73,7 +73,7 @@ async def revorke_token(
 
 
 @router.get(
-    path="/full-logout",
+    path="/revoke-all",
     summary="Revoke all tokens",
 )
 async def revorke_all_tokens(

@@ -6,7 +6,7 @@ import os
 
 
 app = FastAPI(
-    root_path="/api/project",
+    root_path="/api/projects",
 )
 
 set_default_cors_policy(app)

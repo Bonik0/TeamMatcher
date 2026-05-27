@@ -23,7 +23,7 @@ class EmailServiceUser(HttpUser):
     def send_code(self) -> None:
         email = _random_email()
         response = self.client.post(
-            "/code/send", json={"email": email}, catch_response=True
+            "/verification/send", json={"email": email}, catch_response=True
         )
         if response.status_code != 200:
             return
@@ -37,7 +37,7 @@ class EmailServiceUser(HttpUser):
         op_id = self.email_to_op_id[email]
         code = random.randint(10**5, 10**6 - 1)
         self.client.post(
-            "/code/verify", json={"email": email, "code": code, "operation_id": op_id}
+            "/verification/verify", json={"email": email, "code": code, "operation_id": op_id}
         )
 
     @task(5)
@@ -46,5 +46,5 @@ class EmailServiceUser(HttpUser):
         op_id = _random_op_id()
         code = random.randint(10**5, 10**6 - 1)
         self.client.post(
-            "/code/verify", json={"email": email, "code": code, "operation_id": op_id}
+            "/verification/verify", json={"email": email, "code": code, "operation_id": op_id}
         )

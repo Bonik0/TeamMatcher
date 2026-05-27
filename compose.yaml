@@ -200,7 +200,7 @@ services:
   
   match-service:
     build: ./backend/project_service
-    command: "celery -A app.match.router:app worker --loglevel=info"
+    command: "celery -A app.match.router:app worker --loglevel=info --pool=custom"
     ports:
       - 8009:8000
     volumes:

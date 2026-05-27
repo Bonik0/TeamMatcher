@@ -7,7 +7,6 @@ from core.dependencies.jwttoken import get_verifier
 from core.entities import UserRoleType
 from app.user_role.schemas import (
     AddOrUpdateUserRoleIn,
-    DeleteUserProjectRolesIn,
     FindUserRoleByIdOut,
     UserRoleOut,
     ProjectOut,
@@ -32,11 +31,13 @@ from app.user_role.use_cases.find_all_user_roles_use_case import FindAllUserRole
 
 
 router = APIRouter(
-    prefix="/role", tags=["Roles"], dependencies=[get_verifier(UserRoleType.user)]
+    prefix="/projects",
+    tags=["Projects"],
+    dependencies=[get_verifier(UserRoleType.user)],
 )
 
 
-@router.get("/project/{project_id}")
+@router.get("/{project_id}/roles")
 async def find_user_roles_by_project_id(
     request: Request,
     project_id: int = Path(),
@@ -66,27 +67,28 @@ async def find_all_user_roles(
     )
 
 
-@router.put("")
+@router.put("/{project_id}/roles")
 async def add_or_update_user_roles(
     request: Request,
     form: AddOrUpdateUserRoleIn,
+    project_id: int = Path(),
     use_case: AddOrUpdateUserProjectApplicationUseCase = Depends(
         get_add_or_update_user_role_use_case
     ),
     session: AsyncSession = Depends(get_session),
 ) -> UpdateUserActionOut:
-    await use_case.execute(session, request.state.user_id, form.project_id, form.roles)
+    await use_case.execute(session, request.state.user_id, project_id, form.roles)
     return UpdateUserActionOut()
 
 
-@router.delete("")
+@router.delete("/{project_id}/roles")
 async def delete_user_roles(
     request: Request,
-    form: DeleteUserProjectRolesIn,
+    project_id: int = Path(),
     use_case: DeleteUserProjectApplicationUseCase = Depends(
         get_delete_user_role_use_case
     ),
     session: AsyncSession = Depends(get_session),
 ) -> DeleteUserActionOut:
-    await use_case.execute(session, request.state.user_id, form.project_id)
+    await use_case.execute(session, request.state.user_id, project_id)
     return DeleteUserActionOut()

@@ -36,7 +36,7 @@ export default function SearchPage() {
 				params.append("offset", PAGE_SIZE * (page - 1));
 
 				const response = await fetch(
-					`http://localhost:8000/api/search/project?${params.toString()}`,
+					`http://localhost:8000/api/search/projects?${params.toString()}`,
 				);
 				if (!response.ok) {
 					setError("Ошибка поиска");
@@ -111,7 +111,7 @@ export default function SearchPage() {
 						<div style={{ flex: 1 }}>
 							<SearchSelect
 								placeholder="Поиск по ролям"
-								fetchUrl="/api/search/role"
+								fetchUrl="/api/search/roles"
 								onSelect={onSelectRole}
 								selectedItems={roles}
 								executedName="roles"
@@ -140,7 +140,7 @@ export default function SearchPage() {
 						<div style={{ flex: 1 }}>
 							<SearchSelect
 								placeholder="Поиск по компетенциям"
-								fetchUrl="/api/search/competence"
+								fetchUrl="/api/search/competences"
 								onSelect={onSelectComp}
 								selectedItems={comps}
 								executedName="competencies"

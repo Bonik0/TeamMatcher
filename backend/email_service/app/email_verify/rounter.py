@@ -17,7 +17,7 @@ from app.email_verify.dependencies.utils import get_email_verify_utils
 from app.email_verify.use_cases.success_verify import SuccessVerifyUseCase
 
 
-router = APIRouter(prefix="/code", tags=["Checking the mail code"])
+router = APIRouter(prefix="/verification", tags=["Checking the mail code"])
 
 
 @router.post(path="/send", summary="Sending code")

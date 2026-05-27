@@ -29,3 +29,33 @@ id,name
 28,Kotlin
 29,Unity
 30,Проектирование архитектуры
+31,C/C++
+32,RTOS
+33,Микроконтроллеры
+34,Техническая документация
+35,Jira/Confluence
+36,Фасилитация
+37,Администрирование СУБД
+38,Оптимизация запросов
+39,ERP-системы
+40,Selenium/Playwright
+41,Нагрузочное тестирование (JMeter/Gatling)
+42,Prometheus/Grafana
+43,SLO/SLA
+44,Pandas/NumPy
+45,Power BI/Tableau
+46,Ассемблер
+47,Middleware (ESB/Kafka)
+48,AWS/Azure/GCP
+49,Чат-бот платформы (Telegram API)
+50,Unity/Unreal VR
+51,Solidity
+52,Data Quality (Great Expectations)
+53,Git
+54,Helpdesk системы (Zendesk/Jira Service)
+55,PyTorch/TensorFlow
+56,Профилирование приложений
+57,REST/SOAP API
+58,Terraform
+59,Смарт-контракты
+60,Криптография

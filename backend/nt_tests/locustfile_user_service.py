@@ -91,7 +91,7 @@ class UserServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        self.client.get("/competence", headers=headers, name="/competence (get)")
+        self.client.get("/competences", headers=headers, name="/competence (get)")
 
     @task(20)
     def add_competence(self) -> None:
@@ -103,8 +103,8 @@ class UserServiceUser(HttpUser):
         comp_id = random.choice(COMPETENCE_IDS)
         level = random.randint(1, 3)
         payload = {"competences": [{"competence_id": comp_id, "level": level}]}
-        self.client.post(
-            "/competence", json=payload, headers=headers, name="/competence (post)"
+        self.client.put(
+            "/competences", json=payload, headers=headers, name="/competence (post)"
         )
 
     @task(10)
@@ -115,9 +115,8 @@ class UserServiceUser(HttpUser):
             else {}
         )
         comp_id = random.choice(COMPETENCE_IDS)
-        payload = {"competence_ids": [comp_id]}
         self.client.delete(
-            "/competence", json=payload, headers=headers, name="/competence (delete)"
+            f"/competences/{comp_id}", headers=headers, name="/competence (delete)"
         )
 
     @task(20)
@@ -129,7 +128,7 @@ class UserServiceUser(HttpUser):
         )
         project_id = random.choice(PROJECT_IDS)
         self.client.get(
-            f"/role/project/{project_id}", headers=headers, name="/role/project/{id}"
+            f"/projects/{project_id}/roles", headers=headers, name="/role/project/{id}"
         )
 
     @task(15)
@@ -139,7 +138,7 @@ class UserServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        self.client.get("/role", headers=headers, name="/role")
+        self.client.get("/projects", headers=headers, name="/role")
 
     @task(20)
     def add_or_update_roles(self) -> None:
@@ -150,8 +149,8 @@ class UserServiceUser(HttpUser):
             else {}
         )
         roles = _build_roles_for_project(project_id)
-        payload = {"project_id": project_id, "roles": roles}
-        self.client.put("/role", json=payload, headers=headers, name="/role (put)")
+        payload = {"roles": roles}
+        self.client.put(f"/projects/{project_id}/roles", json=payload, headers=headers, name="/role (put)")
 
     @task(10)
     def delete_roles(self) -> None:
@@ -161,9 +160,8 @@ class UserServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        payload = {"project_id": project_id}
         self.client.delete(
-            "/role", json=payload, headers=headers, name="/role (delete)"
+            f"/projects/{project_id}/roles", headers=headers, name="/role (delete)"
         )
 
     @task(15)
@@ -173,4 +171,4 @@ class UserServiceUser(HttpUser):
             if self.access_token
             else {}
         )
-        self.client.get("/team", headers=headers, name="/team")
+        self.client.get("/teams", headers=headers, name="/team")

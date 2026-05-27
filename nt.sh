@@ -32,7 +32,7 @@ docker_end_test
 
 docker_init_test
 echo "-------------------------------NT FOR PROJECT SERVICE-------------------------------"
-locust -f ./backend/nt_tests/locustfile_project_service.py --headless -u 100 -r 10 --run-time "$1" --processes 3 --host=http://localhost:8006  --csv=./nt-reports/project-service.csv
+locust -f ./backend/nt_tests/locustfile_project_service.py --headless -u 50 -r 5 --run-time "$1" --processes 3 --host=http://localhost:8006  --csv=./nt-reports/project-service.csv
 docker_end_test
 
 

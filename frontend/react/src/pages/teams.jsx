@@ -19,9 +19,9 @@ export default function TeamsPage() {
 			try {
 				let url = "";
 				if (user.userRole === "organizer") {
-					url = "http://localhost:8000/api/project/teams";
+					url = "http://localhost:8000/api/projects/teams";
 				} else {
-					url = "http://localhost:8000/api/user/team";
+					url = "http://localhost:8000/api/user/teams";
 				}
 				const response = await fetchWithTokens("GET", url);
 				if (!response.ok) {

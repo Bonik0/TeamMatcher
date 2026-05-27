@@ -35,7 +35,6 @@ async def test_update_project_raises_when_project_missing() -> None:
     use_case = UpdateProjectUseCase(project_repo, AsyncMock(), AsyncMock(), AsyncMock())
     session = AsyncMock()
     form = ProjectUpdateIn(
-        project_id=1,
         name="X",
         description=None,
         start_time=datetime.now() + timedelta(days=1),
@@ -50,7 +49,7 @@ async def test_update_project_raises_when_project_missing() -> None:
     )
 
     with pytest.raises(HTTPException) as exc:
-        await use_case.execute(session, organizer_id=10, form=form)
+        await use_case.execute(session, organizer_id=10, project_id=1, form=form)
 
     assert exc.value.status_code == 404
 
@@ -69,7 +68,6 @@ async def test_update_project_raises_when_not_recruiting() -> None:
     use_case = UpdateProjectUseCase(project_repo, AsyncMock(), AsyncMock(), AsyncMock())
     session = AsyncMock()
     form = ProjectUpdateIn(
-        project_id=1,
         name="X",
         description=None,
         start_time=datetime.now() + timedelta(days=1),
@@ -84,7 +82,7 @@ async def test_update_project_raises_when_not_recruiting() -> None:
     )
 
     with pytest.raises(HTTPException) as exc:
-        await use_case.execute(session, organizer_id=10, form=form)
+        await use_case.execute(session, organizer_id=10, project_id=1, form=form)
 
     assert exc.value.status_code == 400
 
@@ -96,7 +94,6 @@ async def test_update_project_raises_when_wrong_organizer() -> None:
     use_case = UpdateProjectUseCase(project_repo, AsyncMock(), AsyncMock(), AsyncMock())
     session = AsyncMock()
     form = ProjectUpdateIn(
-        project_id=1,
         name="X",
         description=None,
         start_time=datetime.now() + timedelta(days=1),
@@ -117,7 +114,7 @@ async def test_update_project_raises_when_wrong_organizer() -> None:
     )
 
     with pytest.raises(HTTPException) as exc:
-        await use_case.execute(session, organizer_id=99, form=form)
+        await use_case.execute(session, organizer_id=99, project_id=1, form=form)
 
     assert exc.value.status_code == 403
 
@@ -129,7 +126,6 @@ async def test_update_project_raises_when_old_roles_removed() -> None:
     use_case = UpdateProjectUseCase(project_repo, AsyncMock(), AsyncMock(), AsyncMock())
     session = AsyncMock()
     form = ProjectUpdateIn(
-        project_id=1,
         name="X",
         description=None,
         start_time=datetime.now() + timedelta(days=1),
@@ -144,7 +140,7 @@ async def test_update_project_raises_when_old_roles_removed() -> None:
     )
 
     with pytest.raises(HTTPException) as exc:
-        await use_case.execute(session, organizer_id=10, form=form)
+        await use_case.execute(session, organizer_id=10, project_id=1, form=form)
 
     assert exc.value.status_code == 400
 
@@ -160,7 +156,6 @@ async def test_update_project_commits_after_success() -> None:
     session.commit = AsyncMock()
 
     form = ProjectUpdateIn(
-        project_id=1,
         name="New",
         description=None,
         start_time=start,
@@ -183,7 +178,7 @@ async def test_update_project_commits_after_success() -> None:
     use_case = UpdateProjectUseCase(project_repo, AsyncMock(), AsyncMock(), utils)
 
     with patch.object(use_case, "_create_or_update_roles", new_callable=AsyncMock):
-        await use_case.execute(session, organizer_id=10, form=form)
+        await use_case.execute(session, organizer_id=10, project_id=1, form=form)
 
     project_repo.update.assert_awaited_once()
     utils.update.assert_awaited_once_with(1, start.replace(tzinfo=None))
